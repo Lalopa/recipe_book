@@ -48,3 +48,8 @@ app.*.map.json
 /node_modules
 /package-lock.json
 /package.json
+commitlint.config.js
+.husky/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
