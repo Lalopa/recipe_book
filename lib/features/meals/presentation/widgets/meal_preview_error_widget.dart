@@ -18,7 +18,7 @@ class MealPreviewWidgetError extends StatelessWidget {
             Text(
               'Error loading meal. Please try again later.',
               textAlign: TextAlign.center,
-              style: AppTheme.lightTheme.textTheme.bodyMedium!.copyWith(color: Colors.red),
+              style: AppTheme.lightTheme().textTheme.bodyMedium!.copyWith(color: Colors.red),
             ),
           ],
         ),

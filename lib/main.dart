@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Recipe Book',
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.lightTheme(),
       onGenerateRoute: AppRoutes.generateRoute,
       initialRoute: AppRoutesNames.home,
     );

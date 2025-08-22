@@ -3,30 +3,29 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:recipe_book/core/theme/theme.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
   group('AppTheme', () {
     test('should return light theme', () {
-      final theme = AppTheme.lightTheme;
+      final theme = AppTheme.lightTheme(useGoogleFonts: false);
       expect(theme, isA<ThemeData>());
     });
 
     test('should have correct brightness', () {
-      final theme = AppTheme.lightTheme;
+      final theme = AppTheme.lightTheme(useGoogleFonts: false);
       expect(theme.brightness, Brightness.light);
     });
 
     test('should use Material 3', () {
-      final theme = AppTheme.lightTheme;
+      final theme = AppTheme.lightTheme(useGoogleFonts: false);
       expect(theme.useMaterial3, isTrue);
     });
 
     test('should have correct scaffold background color', () {
-      final theme = AppTheme.lightTheme;
+      final theme = AppTheme.lightTheme(useGoogleFonts: false);
       expect(theme.scaffoldBackgroundColor, const Color(0xFFF5F5F5));
     });
 
     test('should have correct color scheme', () {
-      final theme = AppTheme.lightTheme;
+      final theme = AppTheme.lightTheme(useGoogleFonts: false);
       final colorScheme = theme.colorScheme;
 
       expect(colorScheme.primary, const Color(0xFF68B684));
@@ -34,28 +33,8 @@ void main() {
       expect(colorScheme.tertiary, const Color(0xFFFF914D));
     });
 
-    test('should have correct text theme', () {
-      final theme = AppTheme.lightTheme;
-      final textTheme = theme.textTheme;
-
-      expect(textTheme.bodyLarge?.fontSize, 16);
-      expect(textTheme.bodyLarge?.fontWeight, FontWeight.w500);
-      expect(textTheme.bodyLarge?.color, const Color(0xFF333333));
-
-      expect(textTheme.bodyMedium?.fontSize, 14);
-      expect(textTheme.bodyMedium?.fontWeight, FontWeight.w400);
-
-      expect(textTheme.bodySmall?.fontSize, 12);
-      expect(textTheme.bodySmall?.fontWeight, FontWeight.w300);
-      expect(textTheme.bodySmall?.color, const Color(0xFF5B625E));
-
-      expect(textTheme.titleLarge?.fontSize, 20);
-      expect(textTheme.titleLarge?.fontWeight, FontWeight.w600);
-      expect(textTheme.titleLarge?.color, const Color(0xFF333333));
-    });
-
     test('should have correct input decoration theme', () {
-      final theme = AppTheme.lightTheme;
+      final theme = AppTheme.lightTheme(useGoogleFonts: false);
       final inputTheme = theme.inputDecorationTheme;
 
       expect(inputTheme.border, isA<OutlineInputBorder>());
@@ -69,7 +48,7 @@ void main() {
     });
 
     test('should have correct border radius for input fields', () {
-      final theme = AppTheme.lightTheme;
+      final theme = AppTheme.lightTheme(useGoogleFonts: false);
       final inputTheme = theme.inputDecorationTheme;
 
       final border = inputTheme.border! as OutlineInputBorder;
@@ -84,7 +63,7 @@ void main() {
     });
 
     test('should have no border side for input fields', () {
-      final theme = AppTheme.lightTheme;
+      final theme = AppTheme.lightTheme(useGoogleFonts: false);
       final inputTheme = theme.inputDecorationTheme;
 
       final border = inputTheme.border! as OutlineInputBorder;

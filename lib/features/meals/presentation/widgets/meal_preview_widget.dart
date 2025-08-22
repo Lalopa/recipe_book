@@ -43,7 +43,7 @@ class MealPreviewWidget extends StatelessWidget {
                         const SizedBox(height: 5),
                         Text(
                           'Category: ${meal.category}',
-                          style: AppTheme.lightTheme.textTheme.bodySmall!.copyWith(
+                          style: AppTheme.lightTheme().textTheme.bodySmall!.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -64,7 +64,7 @@ class MealPreviewWidget extends StatelessWidget {
                           meal.instructions,
                           maxLines: 4,
                           overflow: TextOverflow.fade,
-                          style: AppTheme.lightTheme.textTheme.bodySmall!.copyWith(
+                          style: AppTheme.lightTheme().textTheme.bodySmall!.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
