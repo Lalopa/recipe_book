@@ -2,4 +2,5 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "Running commitlint"
+echo "commitlint_cli --edit $1"
 dart run commitlint_cli --edit $1
