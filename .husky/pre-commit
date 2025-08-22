@@ -1,0 +1,44 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Autoformat all modified files before commit
+
+function format_if_required {
+    FILES=$1
+
+    dart format $FILES | grep -Ev '^(Unchanged)'
+
+    echo "--> Autoformat was applied/checked ✅"
+}
+
+echo "----------------------------------------------------------"
+echo "        Checking code format on staged files"
+echo "----------------------------------------------------------"
+
+echo "git diff --diff-filter=d --cached --name-only"
+git diff --diff-filter=d --cached --name-only
+
+CHANGED_FILES=$(git diff --diff-filter=d --cached --name-only | grep .dart)
+
+echo "CHANGED_FILES: $CHANGED_FILES"
+
+if [ -z "$CHANGED_FILES" ];
+then
+    echo "--> No files added to check"
+else
+    format_if_required $CHANGED_FILES
+fi
+
+echo "--> Commit is ok ✅"
+echo "----------------------------------------------------------"
+
+
+
+echo "----------------------------------------------------------"
+echo "        Running tests"
+echo "----------------------------------------------------------"
+
+dart test
+
+echo "--> Tests are ok ✅"
+echo "----------------------------------------------------------"
