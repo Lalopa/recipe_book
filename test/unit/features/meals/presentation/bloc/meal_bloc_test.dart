@@ -45,7 +45,8 @@ Meal buildTestMeal({
     name: name ?? '${letter.toUpperCase()} Meal $index',
     thumbnail: thumbnail ?? 'https://example.com/${letter}_$index.jpg',
     category: category ?? 'Category ${letter.toUpperCase()}',
-    instructions: instructions ?? 'Instructions for ${letter.toUpperCase()} meal $index',
+    instructions:
+        instructions ?? 'Instructions for ${letter.toUpperCase()} meal $index',
     ingredients: ingredients ?? {'ingredient_$index': '$index cup'},
   );
 }
@@ -61,7 +62,11 @@ void setupMockWithFirstLetterOnly(MockGetMealsByLetter mock, List<Meal> meals) {
 }
 
 // Helper para configurar mocks con las primeras dos letras retornando comidas
-void setupMockWithFirstTwoLetters(MockGetMealsByLetter mock, List<Meal> firstMeals, List<Meal> secondMeals) {
+void setupMockWithFirstTwoLetters(
+  MockGetMealsByLetter mock,
+  List<Meal> firstMeals,
+  List<Meal> secondMeals,
+) {
   when(mock('a')).thenAnswer((_) async => firstMeals);
   when(mock('b')).thenAnswer((_) async => secondMeals);
   // Configure stubs for other letters to return empty lists
@@ -72,7 +77,10 @@ void setupMockWithFirstTwoLetters(MockGetMealsByLetter mock, List<Meal> firstMea
 }
 
 // Helper para configurar mocks con todas las letras retornando comidas
-void setupMockWithAllLetters(MockGetMealsByLetter mock, {int mealsPerLetter = 4}) {
+void setupMockWithAllLetters(
+  MockGetMealsByLetter mock, {
+  int mealsPerLetter = 4,
+}) {
   for (var i = 0; i < 26; i++) {
     final letter = String.fromCharCode(97 + i);
     final mealsForLetter = List.generate(
@@ -143,7 +151,11 @@ void main() {
     blocTest<MealBloc, MealState>(
       'emits [loading, success] when MealFetched is added with pagination',
       build: () {
-        setupMockWithFirstTwoLetters(mockGetMealsByLetter, testMeals, moreTestMeals);
+        setupMockWithFirstTwoLetters(
+          mockGetMealsByLetter,
+          testMeals,
+          moreTestMeals,
+        );
         return bloc;
       },
       act: (bloc) => bloc.add(const MealFetched()),
@@ -291,6 +303,106 @@ void main() {
         buildMealState(),
         buildMealState(status: MealStatus.failure),
       ],
+    );
+
+    blocTest<MealBloc, MealState>(
+      'should handle pagination correctly',
+      build: () {
+        setupMockWithAllLetters(mockGetMealsByLetter, mealsPerLetter: 6);
+        return bloc;
+      },
+      act: (bloc) => bloc.add(const MealFetched()),
+      expect: () {
+        final expectedMeals = [
+          ...List.generate(6, (i) => buildTestMeal(letter: 'a', index: i + 1)),
+          ...List.generate(6, (i) => buildTestMeal(letter: 'b', index: i + 1)),
+        ];
+
+        return [
+          buildMealState(),
+          buildMealState(
+            status: MealStatus.success,
+            meals: expectedMeals,
+            letterIndex: 2,
+          ),
+        ];
+      },
+      verify: (_) {
+        verify(mockGetMealsByLetter('a')).called(1);
+        verify(mockGetMealsByLetter('b')).called(1);
+      },
+    );
+
+    blocTest<MealBloc, MealState>(
+      'should handle empty results from letters',
+      build: () {
+        // Configure all letters to return empty lists
+        for (var i = 0; i < 26; i++) {
+          final letter = String.fromCharCode(97 + i);
+          when(mockGetMealsByLetter(letter)).thenAnswer((_) async => <Meal>[]);
+        }
+        return bloc;
+      },
+      act: (bloc) => bloc.add(const MealFetched()),
+      expect: () => [
+        buildMealState(),
+        buildMealState(
+          status: MealStatus.success,
+          meals: [],
+          letterIndex: 26,
+          hasReachedMax: true,
+        ),
+      ],
+    );
+
+    blocTest<MealBloc, MealState>(
+      'should handle cache correctly',
+      build: () {
+        setupMockWithFirstLetterOnly(mockGetMealsByLetter, testMeals);
+        return bloc;
+      },
+      act: (bloc) {
+        bloc
+          ..add(const MealFetched())
+          ..add(const MealFetched());
+      },
+      expect: () => [
+        buildMealState(),
+        buildMealState(
+          status: MealStatus.success,
+          meals: testMeals,
+          letterIndex: 26,
+        ),
+      ],
+      verify: (_) {
+        verify(mockGetMealsByLetter('a')).called(1);
+      },
+    );
+
+    blocTest<MealBloc, MealState>(
+      'should handle refresh with cache clearing',
+      build: () {
+        setupMockWithFirstLetterOnly(mockGetMealsByLetter, testMeals);
+        return bloc;
+      },
+      seed: () => buildMealState(
+        status: MealStatus.success,
+        meals: testMeals,
+        letterIndex: 1,
+      ),
+      act: (bloc) => bloc.add(const MealRefreshed()),
+      expect: () => [
+        buildMealState(status: MealStatus.initial),
+        buildMealState(),
+        buildMealState(
+          status: MealStatus.success,
+          meals: testMeals,
+          letterIndex: 26,
+        ),
+      ],
+      verify: (_) {
+        verify(mockGetMealsByLetter('a')).called(1);
+      },
     );
   });
 }
