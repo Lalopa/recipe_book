@@ -30,15 +30,22 @@ class _LoggingInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (kDebugMode) {
       print('REQUEST[${options.method}] => PATH: ${options.path}');
-      print('REQUEST[${options.method}] => QUERY PARAMETERS: ${options.queryParameters}');
+      print(
+        'REQUEST[${options.method}] => QUERY PARAMETERS: ${options.queryParameters}',
+      );
     }
     super.onRequest(options, handler);
   }
 
   @override
-  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     if (kDebugMode) {
-      print('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+      print(
+        'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
+      );
     }
     super.onResponse(response, handler);
   }
@@ -46,7 +53,9 @@ class _LoggingInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (kDebugMode) {
-      print('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
+      print(
+        'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}',
+      );
       print('ERROR MESSAGE: ${err.message}');
     }
     super.onError(err, handler);

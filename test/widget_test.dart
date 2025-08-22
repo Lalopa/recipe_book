@@ -1,52 +1,213 @@
-// This is a basic Flutter widget test.
+// This is a comprehensive test for the meals feature using mocks
 //
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// This test covers different scenarios:
+// - Empty list response
+// - List with data response
+// - Loading state
+// - Error handling
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:recipe_book/features/meals/domain/entities/meal.dart';
+import 'package:recipe_book/features/meals/domain/repositories/meal_repository.dart';
+import 'package:recipe_book/features/meals/domain/usecases/get_meals.dart';
+import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart';
+import 'package:recipe_book/features/meals/presentation/pages/meals_page.dart';
 
-import 'package:recipe_book/core/di/injector.dart';
-import 'package:recipe_book/main.dart';
+// Generate mocks
+@GenerateMocks([MealRepository])
+import 'widget_test.mocks.dart';
 
 void main() {
-  testWidgets('Main page navigation test', (WidgetTester tester) async {
-    // Initialize dependencies before running the test
-    await initDependencies();
+  group('MealsPage Tests', () {
+    late MockMealRepository mockMealRepository;
+    late GetMealsByLetter getMealsByLetter;
+    late MealBloc mealBloc;
 
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    setUp(() {
+      mockMealRepository = MockMealRepository();
+      getMealsByLetter = GetMealsByLetter(mockMealRepository);
+      mealBloc = MealBloc(getMealsByLetter);
+    });
 
-    // Verify that the app starts with the first tab (Recipes) selected
-    expect(find.text('Recipes'), findsOneWidget);
-    expect(find.text('Search'), findsOneWidget);
-    expect(find.text('Favorites'), findsOneWidget);
+    tearDown(() {
+      mealBloc.close();
+    });
 
-    // Verify that the first tab is initially selected (index 0)
-    final bottomNavBar = find.byType(BottomNavigationBar);
-    expect(tester.widget<BottomNavigationBar>(bottomNavBar).currentIndex, equals(0));
+    testWidgets('should show loading state initially', (WidgetTester tester) async {
+      // Arrange
+      when(mockMealRepository.getMealsByLetter(any))
+          .thenAnswer((_) async => []);
 
-    // Tap on the Search tab (index 1)
-    await tester.tap(find.text('Search'));
-    await tester.pump();
+      // Act
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<MealBloc>.value(
+            value: mealBloc,
+            child: const MealsPage(),
+          ),
+        ),
+      );
 
-    // Verify that the Search tab is now selected
-    expect(tester.widget<BottomNavigationBar>(bottomNavBar).currentIndex, equals(1));
+      // Assert
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.text('Loading meals...'), findsOneWidget);
+    });
 
-    // Tap on the Favorites tab (index 2)
-    await tester.tap(find.text('Favorites'));
-    await tester.pump();
+    testWidgets('should show empty state when no meals found', (WidgetTester tester) async {
+      // Arrange
+      when(mockMealRepository.getMealsByLetter(any))
+          .thenAnswer((_) async => []);
 
-    // Verify that the Favorites tab is now selected
-    expect(tester.widget<BottomNavigationBar>(bottomNavBar).currentIndex, equals(2));
+      // Act
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<MealBloc>.value(
+            value: mealBloc,
+            child: const MealsPage(),
+          ),
+        ),
+      );
 
-    // Tap back on the Recipes tab (index 0)
-    await tester.tap(find.text('Recipes'));
-    await tester.pump();
+      // Wait for loading to complete
+      await tester.pumpAndSettle();
 
-    // Verify that the Recipes tab is selected again
-    expect(tester.widget<BottomNavigationBar>(bottomNavBar).currentIndex, equals(0));
+      // Assert
+      expect(find.text('No meals found'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    });
+
+    testWidgets('should show meals list when data is available', (WidgetTester tester) async {
+      // Arrange
+      final mockMeals = [
+        const Meal(
+          id: '1',
+          name: 'Chicken Curry',
+          thumbnail: 'https://example.com/chicken.jpg',
+          category: 'Main Course',
+          instructions: 'Cook chicken with curry spices',
+          ingredients: {'Chicken': '500g', 'Curry Powder': '2 tbsp'},
+        ),
+        const Meal(
+          id: '2',
+          name: 'Beef Stir Fry',
+          thumbnail: 'https://example.com/beef.jpg',
+          category: 'Main Course',
+          instructions: 'Stir fry beef with vegetables',
+          ingredients: {'Beef': '400g', 'Vegetables': '300g'},
+        ),
+      ];
+
+      when(mockMealRepository.getMealsByLetter(any))
+          .thenAnswer((_) async => mockMeals);
+
+      // Act
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<MealBloc>.value(
+            value: mealBloc,
+            child: const MealsPage(),
+          ),
+        ),
+      );
+
+      // Wait for loading to complete
+      await tester.pumpAndSettle();
+
+      // Assert
+      expect(find.text('Chicken Curry'), findsOneWidget);
+      expect(find.text('Beef Stir Fry'), findsOneWidget);
+      expect(find.text('Main Course'), findsNWidgets(2));
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    });
+
+    testWidgets('should show error state when API call fails', (WidgetTester tester) async {
+      // Arrange
+      when(mockMealRepository.getMealsByLetter(any))
+          .thenThrow(Exception('Network error'));
+
+      // Act
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<MealBloc>.value(
+            value: mealBloc,
+            child: const MealsPage(),
+          ),
+        ),
+      );
+
+      // Wait for loading to complete and error to show
+      await tester.pumpAndSettle();
+
+      // Assert
+      expect(find.text('Error loading meals'), findsOneWidget);
+      expect(find.text('Please try again later'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    });
+
+    testWidgets('should refresh meals when pull to refresh is triggered', (WidgetTester tester) async {
+      // Arrange
+      final initialMeals = [
+        const Meal(
+          id: '1',
+          name: 'Chicken Curry',
+          thumbnail: 'https://example.com/chicken.jpg',
+          category: 'Main Course',
+          instructions: 'Cook chicken with curry spices',
+          ingredients: {'Chicken': '500g', 'Curry Powder': '2 tbsp'},
+        ),
+      ];
+
+      final refreshedMeals = [
+        const Meal(
+          id: '1',
+          name: 'Chicken Curry',
+          thumbnail: 'https://example.com/chicken.jpg',
+          category: 'Main Course',
+          instructions: 'Cook chicken with curry spices',
+          ingredients: {'Chicken': '500g', 'Curry Powder': '2 tbsp'},
+        ),
+        const Meal(
+          id: '2',
+          name: 'New Recipe',
+          thumbnail: 'https://example.com/new.jpg',
+          category: 'Dessert',
+          instructions: 'Make a delicious dessert',
+          ingredients: {'Sugar': '100g', 'Flour': '200g'},
+        ),
+      ];
+
+      when(mockMealRepository.getMealsByLetter(any))
+          .thenAnswer((_) async => initialMeals)
+          .thenAnswer((_) async => refreshedMeals);
+
+      // Act
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<MealBloc>.value(
+            value: mealBloc,
+            child: const MealsPage(),
+          ),
+        ),
+      );
+
+      // Wait for initial load
+      await tester.pumpAndSettle();
+
+      // Verify initial state
+      expect(find.text('Chicken Curry'), findsOneWidget);
+      expect(find.text('New Recipe'), findsNothing);
+
+      // Trigger refresh
+      await tester.drag(find.byType(RefreshIndicator), const Offset(0, 300));
+      await tester.pumpAndSettle();
+
+      // Verify refreshed state
+      expect(find.text('Chicken Curry'), findsOneWidget);
+      expect(find.text('New Recipe'), findsOneWidget);
+    });
   });
 }
