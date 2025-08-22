@@ -8,23 +8,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:recipe_book/core/di/injector.dart';
 import 'package:recipe_book/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Main page navigation test', (WidgetTester tester) async {
+    // Initialize dependencies before running the test
+    await initDependencies();
+
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that the app starts with the first tab (Recipes) selected
+    expect(find.text('Recipes'), findsOneWidget);
+    expect(find.text('Search'), findsOneWidget);
+    expect(find.text('Favorites'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Verify that the first tab is initially selected (index 0)
+    final bottomNavBar = find.byType(BottomNavigationBar);
+    expect(tester.widget<BottomNavigationBar>(bottomNavBar).currentIndex, equals(0));
+
+    // Tap on the Search tab (index 1)
+    await tester.tap(find.text('Search'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the Search tab is now selected
+    expect(tester.widget<BottomNavigationBar>(bottomNavBar).currentIndex, equals(1));
+
+    // Tap on the Favorites tab (index 2)
+    await tester.tap(find.text('Favorites'));
+    await tester.pump();
+
+    // Verify that the Favorites tab is now selected
+    expect(tester.widget<BottomNavigationBar>(bottomNavBar).currentIndex, equals(2));
+
+    // Tap back on the Recipes tab (index 0)
+    await tester.tap(find.text('Recipes'));
+    await tester.pump();
+
+    // Verify that the Recipes tab is selected again
+    expect(tester.widget<BottomNavigationBar>(bottomNavBar).currentIndex, equals(0));
   });
 }
