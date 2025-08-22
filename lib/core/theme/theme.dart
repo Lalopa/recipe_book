@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static ThemeData get lightTheme => ThemeData(
@@ -11,6 +12,29 @@ class AppTheme {
     brightness: Brightness.light,
     scaffoldBackgroundColor: const Color(0xFFF5F5F5),
     useMaterial3: true,
+    textTheme: GoogleFonts.interTextTheme(
+      const TextTheme(
+        bodyLarge: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF333333),
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+        bodySmall: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w300,
+          color: Color(0xFF5B625E),
+        ),
+        titleLarge: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF333333),
+        ),
+      ),
+    ),
     inputDecorationTheme: const InputDecorationTheme(
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),

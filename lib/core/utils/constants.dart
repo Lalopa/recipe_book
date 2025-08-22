@@ -4,4 +4,5 @@ class Constants {
 
 class AppRoutesNames {
   static const String home = '/';
+  static const String meals = '/meals';
 }
