@@ -27,12 +27,13 @@ class SearchState extends Equatable {
     List<Meal>? meals,
     String? query,
     String? errorMessage,
+    bool clearErrorMessage = false,
   }) {
     return SearchState(
       status: status ?? this.status,
       meals: meals ?? this.meals,
       query: query ?? this.query,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: clearErrorMessage ? null : (errorMessage ?? this.errorMessage),
     );
   }
 

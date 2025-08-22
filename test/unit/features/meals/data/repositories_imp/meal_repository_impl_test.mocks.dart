@@ -42,4 +42,14 @@ class MockMealRemoteDataSource extends _i1.Mock
             ),
           )
           as _i3.Future<List<_i4.MealModel>>);
+
+  @override
+  _i3.Future<List<_i4.MealModel>> searchMeals(String? query) =>
+      (super.noSuchMethod(
+            Invocation.method(#searchMeals, [query]),
+            returnValue: _i3.Future<List<_i4.MealModel>>.value(
+              <_i4.MealModel>[],
+            ),
+          )
+          as _i3.Future<List<_i4.MealModel>>);
 }

@@ -30,7 +30,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       return;
     }
 
-    emit(state.copyWith(status: SearchStatus.loading, query: query));
+    // Clear previous meals when starting a new search
+    emit(state.copyWith(status: SearchStatus.loading, query: query, meals: []));
 
     try {
       final meals = await _searchMeals(query);

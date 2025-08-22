@@ -40,10 +40,16 @@ class SearchErrorWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          ElevatedButton.icon(
+          ElevatedButton(
             onPressed: onRetry,
-            icon: const Icon(Icons.refresh),
-            label: const Text('Retry'),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.refresh),
+                SizedBox(width: 8),
+                Text('Retry'),
+              ],
+            ),
           ),
         ],
       ),

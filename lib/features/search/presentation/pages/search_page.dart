@@ -23,6 +23,23 @@ class SearchPage extends StatelessWidget {
   }
 }
 
+// Constructor alternativo para testing
+class SearchPageTestable extends StatelessWidget {
+  const SearchPageTestable({
+    required this.searchBloc,
+    super.key,
+  });
+  final SearchBloc searchBloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: searchBloc,
+      child: const SearchView(),
+    );
+  }
+}
+
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
 
