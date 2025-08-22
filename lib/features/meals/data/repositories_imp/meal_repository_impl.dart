@@ -13,4 +13,10 @@ class MealRepositoryImpl implements MealRepository {
     final models = await remoteDataSource.fetchByLetter(letter);
     return models.map((m) => m.toEntity()).toList();
   }
+
+  @override
+  Future<List<Meal>> searchMeals(String query) async {
+    final models = await remoteDataSource.searchMeals(query);
+    return models.map((m) => m.toEntity()).toList();
+  }
 }

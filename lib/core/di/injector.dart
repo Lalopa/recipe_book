@@ -6,7 +6,9 @@ import 'package:recipe_book/features/meals/data/datasources/meal_rest_provider.d
 import 'package:recipe_book/features/meals/data/repositories_imp/meal_repository_impl.dart';
 import 'package:recipe_book/features/meals/domain/repositories/meal_repository.dart';
 import 'package:recipe_book/features/meals/domain/usecases/get_meals.dart';
+import 'package:recipe_book/features/meals/domain/usecases/search_meals.dart';
 import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart';
+import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -23,8 +25,10 @@ Future<void> initDependencies() async {
     )
     // Usecase
     ..registerLazySingleton(() => GetMealsByLetter(getIt()))
+    ..registerLazySingleton(() => SearchMeals(getIt()))
     // Bloc
     ..registerFactory(() => MealBloc(getIt()))
+    ..registerFactory(() => SearchBloc(getIt()))
     // Cubit
     ..registerFactory(MainCubit.new);
 }

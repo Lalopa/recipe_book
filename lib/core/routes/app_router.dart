@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipe_book/core/utils/constants.dart';
 import 'package:recipe_book/features/main/presentation/pages/main_page.dart';
 import 'package:recipe_book/features/meals/presentation/pages/meals_page.dart';
+import 'package:recipe_book/features/search/presentation/pages/search_page.dart';
 
 class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -15,6 +16,12 @@ class AppRoutes {
       case AppRoutesNames.meals:
         return MaterialPageRoute(
           builder: (_) => const MealsPage(),
+          settings: settings,
+        );
+
+      case AppRoutesNames.search:
+        return MaterialPageRoute(
+          builder: (_) => const SearchPage(),
           settings: settings,
         );
 

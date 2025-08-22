@@ -22,4 +22,19 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
         )
         .toList();
   }
+
+  @override
+  Future<List<MealModel>> searchMeals(String query) async {
+    final res = await dio.get<Map<String, dynamic>>(
+      ApiConstants.search,
+      queryParameters: {'s': query},
+    );
+    final list = res.data?['meals'] as List<dynamic>?;
+    if (list == null) return [];
+    return list
+        .map(
+          (e) => MealModel.fromJson(e as Map<String, dynamic>),
+        )
+        .toList();
+  }
 }
