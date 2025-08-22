@@ -37,47 +37,55 @@ class MealBloc extends Bloc<MealEvent, MealState> {
 
     emit(state.copyWith(status: MealStatus.loading));
 
-    var letterIndex = state.letterIndex;
-    var offsetInLetter = state.offsetInLetter;
-    final aggregated = List<Meal>.of(state.meals);
+    try {
+      var letterIndex = state.letterIndex;
+      var offsetInLetter = state.offsetInLetter;
+      final aggregated = List<Meal>.of(state.meals);
 
-    while (aggregated.length - state.meals.length < _pageSize && letterIndex < _letters.length) {
-      final letter = _letters[letterIndex];
+      while (aggregated.length - state.meals.length < _pageSize && letterIndex < _letters.length) {
+        final letter = _letters[letterIndex];
 
-      final items = await _getMealsForLetter(letter);
+        final items = await _getMealsForLetter(letter);
 
-      if (items.isEmpty) {
-        letterIndex++;
-        offsetInLetter = 0;
-        continue;
+        if (items.isEmpty) {
+          letterIndex++;
+          offsetInLetter = 0;
+          continue;
+        }
+
+        final remainingInLetter = items.length - offsetInLetter;
+        final need = _pageSize - (aggregated.length - state.meals.length);
+        final take = remainingInLetter > need ? need : remainingInLetter;
+
+        if (take > 0) {
+          aggregated.addAll(items.sublist(offsetInLetter, offsetInLetter + take));
+          offsetInLetter += take;
+        }
+
+        if (offsetInLetter >= items.length) {
+          letterIndex++;
+          offsetInLetter = 0;
+        }
       }
 
-      final remainingInLetter = items.length - offsetInLetter;
-      final need = _pageSize - (aggregated.length - state.meals.length);
-      final take = remainingInLetter > need ? need : remainingInLetter;
+      final reachedMax = letterIndex >= _letters.length && (state.meals.length == aggregated.length);
 
-      if (take > 0) {
-        aggregated.addAll(items.sublist(offsetInLetter, offsetInLetter + take));
-        offsetInLetter += take;
-      }
-
-      if (offsetInLetter >= items.length) {
-        letterIndex++;
-        offsetInLetter = 0;
-      }
+      emit(
+        state.copyWith(
+          status: MealStatus.success,
+          meals: aggregated,
+          letterIndex: letterIndex,
+          offsetInLetter: offsetInLetter,
+          hasReachedMax: reachedMax,
+        ),
+      );
+    } on Exception catch (_) {
+      emit(
+        state.copyWith(
+          status: MealStatus.failure,
+        ),
+      );
     }
-
-    final reachedMax = letterIndex >= _letters.length && (state.meals.length == aggregated.length);
-
-    emit(
-      state.copyWith(
-        status: MealStatus.success,
-        meals: aggregated,
-        letterIndex: letterIndex,
-        offsetInLetter: offsetInLetter,
-        hasReachedMax: reachedMax,
-      ),
-    );
   }
 
   Future<List<Meal>> _getMealsForLetter(String letter) async {

@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      mockito|mockBuilder:
+        generate_for:
+          - test/unit/features/meals/domain/usecases/get_meals_test.dart
+          - test/unit/features/meals/data/repositories_imp/meal_repository_impl_test.dart
+          - test/unit/features/meals/data/datasources/meal_rest_provider_test.dart
+          - test/unit/features/meals/presentation/bloc/meal_bloc_test.dart
