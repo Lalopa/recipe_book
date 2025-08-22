@@ -15,21 +15,18 @@ echo "----------------------------------------------------------"
 echo "        Checking code format on staged files"
 echo "----------------------------------------------------------"
 
-echo "git diff --diff-filter=d --cached --name-only"
-git diff --diff-filter=d --cached --name-only
-
-CHANGED_FILES=$(git diff --diff-filter=d --cached --name-only | grep .dart)
+CHANGED_FILES=$(git diff --diff-filter=d --cached --name-only | grep -E "\.dart$" || true)
 
 echo "CHANGED_FILES: $CHANGED_FILES"
 
 if [ -z "$CHANGED_FILES" ];
 then
-    echo "--> No files added to check"
+    echo "--> No .dart files to check - skipping format check ✅"
 else
     format_if_required $CHANGED_FILES
 fi
 
-echo "--> Commit is ok ✅"
+echo "--> Format check is ok ✅"
 echo "----------------------------------------------------------"
 
 
@@ -38,7 +35,7 @@ echo "----------------------------------------------------------"
 echo "        Running tests"
 echo "----------------------------------------------------------"
 
-dart test
+flutter test
 
 echo "--> Tests are ok ✅"
 echo "----------------------------------------------------------"
