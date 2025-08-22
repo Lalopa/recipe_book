@@ -3,39 +3,39 @@
 
 # Autoformat all modified files before commit
 
-# function format_if_required {
-#     FILES=$1
+function format_if_required {
+    FILES=$1
 
-#     dart format $FILES | grep -Ev '^(Unchanged)'
+    dart format $FILES | grep -Ev '^(Unchanged)'
 
-#     echo "--> Autoformat was applied/checked ✅"
-# }
+    echo "--> Autoformat was applied/checked ✅"
+}
 
-# echo "----------------------------------------------------------"
-# echo "        Checking code format on staged files"
-# echo "----------------------------------------------------------"
+echo "----------------------------------------------------------"
+echo "        Checking code format on staged files"
+echo "----------------------------------------------------------"
 
-# CHANGED_FILES=$(git diff --diff-filter=d --cached --name-only | grep -E "\.dart$" || true)
+CHANGED_FILES=$(git diff --diff-filter=d --cached --name-only | grep -E "\.dart$" || true)
 
-# echo "CHANGED_FILES: $CHANGED_FILES"
+echo "CHANGED_FILES: $CHANGED_FILES"
 
-# if [ -z "$CHANGED_FILES" ];
-# then
-#     echo "--> No .dart files to check - skipping format check ✅"
-# else
-#     format_if_required $CHANGED_FILES
-# fi
+if [ -z "$CHANGED_FILES" ];
+then
+    echo "--> No .dart files to check - skipping format check ✅"
+else
+    format_if_required $CHANGED_FILES
+fi
 
-# echo "--> Format check is ok ✅"
-# echo "----------------------------------------------------------"
+echo "--> Format check is ok ✅"
+echo "----------------------------------------------------------"
 
 
 
-# echo "----------------------------------------------------------"
-# echo "        Running tests"
-# echo "----------------------------------------------------------"
+echo "----------------------------------------------------------"
+echo "        Running tests"
+echo "----------------------------------------------------------"
 
-# flutter test
+flutter test
 
 echo "--> Tests are ok ✅"
 echo "----------------------------------------------------------"
