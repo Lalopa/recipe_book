@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recipe_book/core/theme/theme.dart';
 import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/favorites/presentation/widgets/favorite_meal_widget.dart';
+import 'package:recipe_book/features/meals/presentation/widgets/custom_app_bar_widget.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -24,11 +24,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mis Favoritos'),
-        backgroundColor: AppTheme.lightTheme().colorScheme.primary,
-        foregroundColor: Colors.white,
-      ),
+      appBar: const CustomAppBarWidget(),
       body: BlocBuilder<FavoriteBloc, FavoriteState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -49,7 +45,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No tienes favoritos aún',
+                    "Don't have favorites yet",
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey[600],
@@ -58,7 +54,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Agrega comidas a tus favoritos tocando el corazón',
+                    'Add meals to your favorites by tapping the heart',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[500],
