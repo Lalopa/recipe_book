@@ -25,7 +25,7 @@ class MealObjectBoxModel {
       thumbnail: meal.thumbnail,
       category: meal.category,
       instructions: meal.instructions,
-      ingredientsJson: _mapToJson(meal.ingredients),
+      ingredientsJson: mapToJson(meal.ingredients),
       timestamp: now,
       expiresAt: expiresAt,
     );
@@ -57,7 +57,7 @@ class MealObjectBoxModel {
       thumbnail: thumbnail,
       category: category,
       instructions: instructions,
-      ingredients: _jsonToMap(ingredientsJson),
+      ingredients: jsonToMap(ingredientsJson),
     );
   }
 
@@ -66,12 +66,12 @@ class MealObjectBoxModel {
     return DateTime.now().isAfter(expiresAt!);
   }
 
-  static String _mapToJson(Map<String, String> ingredients) {
+  static String mapToJson(Map<String, String> ingredients) {
     final entries = ingredients.entries.map((e) => '"${e.key}":"${e.value}"').join(',');
     return '{$entries}';
   }
 
-  static Map<String, String> _jsonToMap(String json) {
+  static Map<String, String> jsonToMap(String json) {
     try {
       final map = <String, String>{};
       if (json.isEmpty || json == '{}') return map;

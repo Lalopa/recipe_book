@@ -13,3 +13,4 @@ targets:
           - test/unit/features/meals/presentation/bloc/meal_bloc_test.dart
           - test/unit/features/search/presentation/bloc/search_bloc_test.dart
           - test/widgets/features/search/presentation/pages/search_page_test.dart
+          - test/unit/features/main/presentation/pages/main_page_test.dart

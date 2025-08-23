@@ -38,19 +38,6 @@ class _LoggingInterceptor extends Interceptor {
   }
 
   @override
-  void onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
-    if (kDebugMode) {
-      print(
-        'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
-      );
-    }
-    super.onResponse(response, handler);
-  }
-
-  @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     if (kDebugMode) {
       print(
@@ -58,6 +45,7 @@ class _LoggingInterceptor extends Interceptor {
       );
       print('ERROR MESSAGE: ${err.message}');
     }
+
     super.onError(err, handler);
   }
 }

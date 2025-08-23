@@ -4,6 +4,7 @@ import 'package:recipe_book/core/routes/app_router.dart';
 import 'package:recipe_book/core/utils/constants.dart';
 import 'package:recipe_book/features/main/presentation/pages/main_page.dart';
 import 'package:recipe_book/features/meals/presentation/pages/meals_page.dart';
+import 'package:recipe_book/features/search/presentation/pages/search_page.dart';
 
 class MockBuildContext extends BuildContext {
   @override
@@ -28,6 +29,15 @@ void main() {
 
       expect(route, isA<MaterialPageRoute<dynamic>>());
       expect(route.settings.name, AppRoutesNames.meals);
+    });
+
+    test('should generate search route correctly', () {
+      final route = AppRoutes.generateRoute(
+        const RouteSettings(name: AppRoutesNames.search),
+      );
+
+      expect(route, isA<MaterialPageRoute<dynamic>>());
+      expect(route.settings.name, AppRoutesNames.search);
     });
 
     test('should generate default route for unknown route', () {
@@ -68,6 +78,17 @@ void main() {
 
       final widget = route.builder(MockBuildContext());
       expect(widget, isA<MealsPage>());
+    });
+
+    test('should build correct widget for search route', () {
+      final route =
+          AppRoutes.generateRoute(
+                const RouteSettings(name: AppRoutesNames.search),
+              )
+              as MaterialPageRoute;
+
+      final widget = route.builder(MockBuildContext());
+      expect(widget, isA<SearchPage>());
     });
 
     test('should build Scaffold with error message for unknown route', () {

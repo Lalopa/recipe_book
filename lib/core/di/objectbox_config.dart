@@ -22,7 +22,6 @@ class ObjectBoxConfig {
       final docsDir = await _getDocumentsDirectory();
       final objectboxDir = path.join(docsDir.path, 'objectbox');
 
-      // Crear el store usando el modelo generado
       _store = await openStore(directory: objectboxDir);
 
       log('ObjectBox initialized successfully at: $objectboxDir');
