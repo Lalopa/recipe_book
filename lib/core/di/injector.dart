@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:recipe_book/core/cache/managers/objectbox_cache_manager.dart';
 import 'package:recipe_book/core/di/dio_config.dart';
 import 'package:recipe_book/core/di/objectbox_config.dart';
 import 'package:recipe_book/features/favorites/data/datasources/favorite_local_datasource.dart';
@@ -26,15 +27,19 @@ Future<void> initDependencies() async {
 
   getIt
     ..registerLazySingleton(DioConfig.createDio)
+    // Cache Manager
+    ..registerLazySingleton<ObjectBoxCacheManager>(
+      () => ObjectBoxCacheManager.instance,
+    )
     // Data
     ..registerLazySingleton<MealRemoteDataSource>(
       () => MealRemoteDataSourceImpl(getIt()),
     )
     ..registerLazySingleton<MealLocalDataSource>(
-      MealLocalDataSourceImpl.new,
+      () => MealLocalDataSourceImpl(getIt()),
     )
     ..registerLazySingleton<FavoriteLocalDataSource>(
-      FavoriteLocalDataSourceImpl.new,
+      () => FavoriteLocalDataSourceImpl(getIt()),
     )
     // Repositories
     ..registerLazySingleton<MealRepository>(
