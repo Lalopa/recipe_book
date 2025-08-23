@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:recipe_book/core/di/injector.dart';
+import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/main/presentation/cubit/main_cubit.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart';
@@ -36,6 +37,10 @@ class _MealsViewState extends State<MealsView> {
   void initState() {
     super.initState();
     _controller.addListener(_onScroll);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FavoriteBloc>().add(const FavoritesLoaded());
+    });
   }
 
   @override

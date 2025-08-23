@@ -84,4 +84,24 @@ class MockMealLocalDataSource extends _i1.Mock
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
+
+  @override
+  _i3.Future<List<_i4.MealModel>?> getCachedSearchResults(String? query) =>
+      (super.noSuchMethod(
+            Invocation.method(#getCachedSearchResults, [query]),
+            returnValue: _i3.Future<List<_i4.MealModel>?>.value(),
+          )
+          as _i3.Future<List<_i4.MealModel>?>);
+
+  @override
+  _i3.Future<void> cacheSearchResults(
+    String? query,
+    List<_i4.MealModel>? meals,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#cacheSearchResults, [query, meals]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 }

@@ -3,12 +3,14 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i6;
 
-import 'package:flutter_bloc/flutter_bloc.dart' as _i6;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i7;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:recipe_book/features/main/presentation/cubit/main_cubit.dart'
+import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart'
     as _i4;
+import 'package:recipe_book/features/main/presentation/cubit/main_cubit.dart'
+    as _i5;
 import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart'
     as _i2;
 import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart'
@@ -38,10 +40,15 @@ class _FakeSearchState_1 extends _i1.SmartFake implements _i3.SearchState {
     : super(parent, parentInvocation);
 }
 
+class _FakeFavoriteState_2 extends _i1.SmartFake implements _i4.FavoriteState {
+  _FakeFavoriteState_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [MainCubit].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockMainCubit extends _i1.Mock implements _i4.MainCubit {
+class MockMainCubit extends _i1.Mock implements _i5.MainCubit {
   MockMainCubit() {
     _i1.throwOnMissingStub(this);
   }
@@ -51,12 +58,12 @@ class MockMainCubit extends _i1.Mock implements _i4.MainCubit {
       (super.noSuchMethod(Invocation.getter(#state), returnValue: 0) as int);
 
   @override
-  _i5.Stream<int> get stream =>
+  _i6.Stream<int> get stream =>
       (super.noSuchMethod(
             Invocation.getter(#stream),
-            returnValue: _i5.Stream<int>.empty(),
+            returnValue: _i6.Stream<int>.empty(),
           )
-          as _i5.Stream<int>);
+          as _i6.Stream<int>);
 
   @override
   bool get isClosed =>
@@ -76,7 +83,7 @@ class MockMainCubit extends _i1.Mock implements _i4.MainCubit {
   );
 
   @override
-  void onChange(_i6.Change<int>? change) => super.noSuchMethod(
+  void onChange(_i7.Change<int>? change) => super.noSuchMethod(
     Invocation.method(#onChange, [change]),
     returnValueForMissingStub: null,
   );
@@ -94,13 +101,13 @@ class MockMainCubit extends _i1.Mock implements _i4.MainCubit {
   );
 
   @override
-  _i5.Future<void> close() =>
+  _i6.Future<void> close() =>
       (super.noSuchMethod(
             Invocation.method(#close, []),
-            returnValue: _i5.Future<void>.value(),
-            returnValueForMissingStub: _i5.Future<void>.value(),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
           )
-          as _i5.Future<void>);
+          as _i6.Future<void>);
 }
 
 /// A class which mocks [MealBloc].
@@ -120,12 +127,12 @@ class MockMealBloc extends _i1.Mock implements _i2.MealBloc {
           as _i2.MealState);
 
   @override
-  _i5.Stream<_i2.MealState> get stream =>
+  _i6.Stream<_i2.MealState> get stream =>
       (super.noSuchMethod(
             Invocation.getter(#stream),
-            returnValue: _i5.Stream<_i2.MealState>.empty(),
+            returnValue: _i6.Stream<_i2.MealState>.empty(),
           )
-          as _i5.Stream<_i2.MealState>);
+          as _i6.Stream<_i2.MealState>);
 
   @override
   bool get isClosed =>
@@ -152,31 +159,31 @@ class MockMealBloc extends _i1.Mock implements _i2.MealBloc {
 
   @override
   void on<E extends _i2.MealEvent>(
-    _i6.EventHandler<E, _i2.MealState>? handler, {
-    _i6.EventTransformer<E>? transformer,
+    _i7.EventHandler<E, _i2.MealState>? handler, {
+    _i7.EventTransformer<E>? transformer,
   }) => super.noSuchMethod(
     Invocation.method(#on, [handler], {#transformer: transformer}),
     returnValueForMissingStub: null,
   );
 
   @override
-  void onTransition(_i6.Transition<_i2.MealEvent, _i2.MealState>? transition) =>
+  void onTransition(_i7.Transition<_i2.MealEvent, _i2.MealState>? transition) =>
       super.noSuchMethod(
         Invocation.method(#onTransition, [transition]),
         returnValueForMissingStub: null,
       );
 
   @override
-  _i5.Future<void> close() =>
+  _i6.Future<void> close() =>
       (super.noSuchMethod(
             Invocation.method(#close, []),
-            returnValue: _i5.Future<void>.value(),
-            returnValueForMissingStub: _i5.Future<void>.value(),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
           )
-          as _i5.Future<void>);
+          as _i6.Future<void>);
 
   @override
-  void onChange(_i6.Change<_i2.MealState>? change) => super.noSuchMethod(
+  void onChange(_i7.Change<_i2.MealState>? change) => super.noSuchMethod(
     Invocation.method(#onChange, [change]),
     returnValueForMissingStub: null,
   );
@@ -211,12 +218,12 @@ class MockSearchBloc extends _i1.Mock implements _i3.SearchBloc {
           as _i3.SearchState);
 
   @override
-  _i5.Stream<_i3.SearchState> get stream =>
+  _i6.Stream<_i3.SearchState> get stream =>
       (super.noSuchMethod(
             Invocation.getter(#stream),
-            returnValue: _i5.Stream<_i3.SearchState>.empty(),
+            returnValue: _i6.Stream<_i3.SearchState>.empty(),
           )
-          as _i5.Stream<_i3.SearchState>);
+          as _i6.Stream<_i3.SearchState>);
 
   @override
   bool get isClosed =>
@@ -243,8 +250,8 @@ class MockSearchBloc extends _i1.Mock implements _i3.SearchBloc {
 
   @override
   void on<E extends _i3.SearchEvent>(
-    _i6.EventHandler<E, _i3.SearchState>? handler, {
-    _i6.EventTransformer<E>? transformer,
+    _i7.EventHandler<E, _i3.SearchState>? handler, {
+    _i7.EventTransformer<E>? transformer,
   }) => super.noSuchMethod(
     Invocation.method(#on, [handler], {#transformer: transformer}),
     returnValueForMissingStub: null,
@@ -252,23 +259,115 @@ class MockSearchBloc extends _i1.Mock implements _i3.SearchBloc {
 
   @override
   void onTransition(
-    _i6.Transition<_i3.SearchEvent, _i3.SearchState>? transition,
+    _i7.Transition<_i3.SearchEvent, _i3.SearchState>? transition,
   ) => super.noSuchMethod(
     Invocation.method(#onTransition, [transition]),
     returnValueForMissingStub: null,
   );
 
   @override
-  _i5.Future<void> close() =>
+  _i6.Future<void> close() =>
       (super.noSuchMethod(
             Invocation.method(#close, []),
-            returnValue: _i5.Future<void>.value(),
-            returnValueForMissingStub: _i5.Future<void>.value(),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
           )
-          as _i5.Future<void>);
+          as _i6.Future<void>);
 
   @override
-  void onChange(_i6.Change<_i3.SearchState>? change) => super.noSuchMethod(
+  void onChange(_i7.Change<_i3.SearchState>? change) => super.noSuchMethod(
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
+}
+
+/// A class which mocks [FavoriteBloc].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFavoriteBloc extends _i1.Mock implements _i4.FavoriteBloc {
+  MockFavoriteBloc() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.FavoriteState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeFavoriteState_2(this, Invocation.getter(#state)),
+          )
+          as _i4.FavoriteState);
+
+  @override
+  _i6.Stream<_i4.FavoriteState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i6.Stream<_i4.FavoriteState>.empty(),
+          )
+          as _i6.Stream<_i4.FavoriteState>);
+
+  @override
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
+
+  @override
+  void add(_i4.FavoriteEvent? event) => super.noSuchMethod(
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onEvent(_i4.FavoriteEvent? event) => super.noSuchMethod(
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void emit(_i4.FavoriteState? state) => super.noSuchMethod(
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void on<E extends _i4.FavoriteEvent>(
+    _i7.EventHandler<E, _i4.FavoriteState>? handler, {
+    _i7.EventTransformer<E>? transformer,
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onTransition(
+    _i7.Transition<_i4.FavoriteEvent, _i4.FavoriteState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i6.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
+
+  @override
+  void onChange(_i7.Change<_i4.FavoriteState>? change) => super.noSuchMethod(
     Invocation.method(#onChange, [change]),
     returnValueForMissingStub: null,
   );

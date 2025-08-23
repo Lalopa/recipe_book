@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3216279247983858522",
-      "lastPropertyId": "9:6032104345557546439",
+      "lastPropertyId": "10:6573547571161030922",
       "name": "MealObjectBoxModel",
       "properties": [
         {
@@ -55,6 +55,11 @@
           "id": "9:6032104345557546439",
           "name": "ingredientsJson",
           "type": 9
+        },
+        {
+          "id": "10:6573547571161030922",
+          "name": "isFavorite",
+          "type": 1
         }
       ],
       "relations": []

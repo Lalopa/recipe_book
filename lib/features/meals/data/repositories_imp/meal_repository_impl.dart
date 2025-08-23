@@ -28,7 +28,17 @@ class MealRepositoryImpl implements MealRepository {
 
   @override
   Future<List<Meal>> searchMeals(String query) async {
+    final cachedModels = await localDataSource.getCachedSearchResults(query);
+    if (cachedModels != null && cachedModels.isNotEmpty) {
+      return cachedModels.map((m) => m.toEntity()).toList();
+    }
+
     final models = await remoteDataSource.searchMeals(query);
+
+    if (models.isNotEmpty) {
+      await localDataSource.cacheSearchResults(query, models);
+    }
+
     return models.map((m) => m.toEntity()).toList();
   }
 }

@@ -3,7 +3,12 @@ import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 
 abstract class MealLocalDataSource {
   Future<List<MealModel>?> getCachedMealsByLetter(String letter);
+
   Future<void> cacheMealsByLetter(String letter, List<MealModel> meals);
+
+  Future<List<MealModel>?> getCachedSearchResults(String query);
+
+  Future<void> cacheSearchResults(String query, List<MealModel> meals);
 }
 
 class MealLocalDataSourceImpl implements MealLocalDataSource {
@@ -21,5 +26,25 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
       meals,
       ttl: const Duration(minutes: 30),
     );
+  }
+
+  @override
+  Future<List<MealModel>?> getCachedSearchResults(String query) async {
+    final normalizedQuery = _normalizeQuery(query);
+    return _cache.getCachedMeals(normalizedQuery);
+  }
+
+  @override
+  Future<void> cacheSearchResults(String query, List<MealModel> meals) async {
+    final normalizedQuery = _normalizeQuery(query);
+    await _cache.cacheMeals(
+      normalizedQuery,
+      meals,
+      ttl: const Duration(hours: 1), // Cache por 1 hora
+    );
+  }
+
+  String _normalizeQuery(String query) {
+    return query.trim().toLowerCase();
   }
 }

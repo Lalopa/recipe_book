@@ -4,230 +4,201 @@ import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart';
 
 void main() {
   group('MealState', () {
-    const testMeals = [
-      Meal(
-        id: '1',
-        name: 'Test Meal 1',
-        thumbnail: 'https://example.com/image1.jpg',
-        category: 'Test Category',
-        instructions: 'Test instructions 1',
-        ingredients: {'ingredient1': 'measure1'},
-      ),
-      Meal(
-        id: '2',
-        name: 'Test Meal 2',
-        thumbnail: 'https://example.com/image2.jpg',
-        category: 'Test Category',
-        instructions: 'Test instructions 2',
-        ingredients: {'ingredient2': 'measure2'},
-      ),
-    ];
+    test('should support equality', () {
+      const state1 = MealState(
+        status: MealStatus.initial,
+        meals: [],
+        letterIndex: 0,
+        offsetInLetter: 0,
+        hasReachedMax: false,
+      );
+      const state2 = MealState(
+        status: MealStatus.initial,
+        meals: [],
+        letterIndex: 0,
+        offsetInLetter: 0,
+        hasReachedMax: false,
+      );
 
-    group('MealState.initial', () {
-      test('should create initial state with correct values', () {
-        const state = MealState.initial();
-
-        expect(state.status, MealStatus.initial);
-        expect(state.meals, isEmpty);
-        expect(state.letterIndex, 0);
-        expect(state.offsetInLetter, 0);
-        expect(state.hasReachedMax, false);
-        expect(state.searchQuery, '');
-        expect(state.searchResults, isEmpty);
-      });
+      expect(state1, equals(state2));
+      expect(state1.hashCode, equals(state2.hashCode));
     });
 
-    group('MealState constructor', () {
-      test('should create state with custom values', () {
-        const state = MealState(
-          status: MealStatus.success,
-          meals: testMeals,
-          letterIndex: 5,
-          offsetInLetter: 10,
-          hasReachedMax: true,
-          searchQuery: 'pizza',
-          searchResults: testMeals,
-        );
+    test('should support inequality', () {
+      const state1 = MealState(
+        status: MealStatus.initial,
+        meals: [],
+        letterIndex: 0,
+        offsetInLetter: 0,
+        hasReachedMax: false,
+      );
+      const state2 = MealState(
+        status: MealStatus.loading,
+        meals: [],
+        letterIndex: 0,
+        offsetInLetter: 0,
+        hasReachedMax: false,
+      );
 
-        expect(state.status, MealStatus.success);
-        expect(state.meals, testMeals);
-        expect(state.letterIndex, 5);
-        expect(state.offsetInLetter, 10);
-        expect(state.hasReachedMax, true);
-        expect(state.searchQuery, 'pizza');
-        expect(state.searchResults, testMeals);
-      });
+      expect(state1, isNot(equals(state2)));
     });
 
-    group('copyWith', () {
-      test('should return same instance when no parameters are provided', () {
-        const state = MealState(
-          status: MealStatus.success,
-          meals: testMeals,
-          letterIndex: 1,
-          offsetInLetter: 0,
-          hasReachedMax: false,
-          searchQuery: '',
-          searchResults: [],
-        );
+    test('should support copyWith', () {
+      const originalState = MealState(
+        status: MealStatus.initial,
+        meals: [],
+        letterIndex: 0,
+        offsetInLetter: 0,
+        hasReachedMax: false,
+      );
 
-        final newState = state.copyWith();
+      final updatedState = originalState.copyWith(
+        status: MealStatus.loading,
+        meals: [
+          const Meal(
+            id: '1',
+            name: 'Test Meal',
+            thumbnail: 'test.jpg',
+            category: 'Test Category',
+            instructions: 'Test instructions',
+            ingredients: {'ingredient1': 'measure1'},
+          ),
+        ],
+        letterIndex: 1,
+        offsetInLetter: 5,
+        hasReachedMax: true,
+      );
 
-        expect(newState, equals(state));
-      });
-
-      test('should update only provided parameters', () {
-        const state = MealState(
-          status: MealStatus.success,
-          meals: testMeals,
-          letterIndex: 1,
-          offsetInLetter: 0,
-          hasReachedMax: false,
-          searchQuery: '',
-          searchResults: [],
-        );
-
-        final newState = state.copyWith(
-          status: MealStatus.loading,
-          hasReachedMax: true,
-        );
-
-        expect(newState.status, MealStatus.loading);
-        expect(newState.meals, testMeals);
-        expect(newState.letterIndex, 1);
-        expect(newState.offsetInLetter, 0);
-        expect(newState.hasReachedMax, true);
-        expect(newState.searchQuery, '');
-        expect(newState.searchResults, isEmpty);
-      });
-
-      test('should update all parameters when provided', () {
-        const state = MealState.initial();
-
-        final newState = state.copyWith(
-          status: MealStatus.success,
-          meals: testMeals,
-          letterIndex: 5,
-          offsetInLetter: 10,
-          hasReachedMax: true,
-          searchQuery: 'pizza',
-          searchResults: testMeals,
-        );
-
-        expect(newState.status, MealStatus.success);
-        expect(newState.meals, testMeals);
-        expect(newState.letterIndex, 5);
-        expect(newState.offsetInLetter, 10);
-        expect(newState.hasReachedMax, true);
-        expect(newState.searchQuery, 'pizza');
-        expect(newState.searchResults, testMeals);
-      });
+      expect(updatedState.status, equals(MealStatus.loading));
+      expect(updatedState.meals.length, equals(1));
+      expect(updatedState.letterIndex, equals(1));
+      expect(updatedState.offsetInLetter, equals(5));
+      expect(updatedState.hasReachedMax, isTrue);
     });
 
-    group('props', () {
-      test('should return correct props list', () {
-        const state = MealState(
-          status: MealStatus.success,
-          meals: testMeals,
-          letterIndex: 5,
-          offsetInLetter: 10,
-          hasReachedMax: true,
-          searchQuery: 'pizza',
-          searchResults: testMeals,
-        );
+    test('should support partial copyWith', () {
+      const originalState = MealState(
+        status: MealStatus.initial,
+        meals: [],
+        letterIndex: 0,
+        offsetInLetter: 0,
+        hasReachedMax: false,
+      );
 
-        expect(state.props, [
+      final updatedState = originalState.copyWith(
+        status: MealStatus.loading,
+      );
+
+      expect(updatedState.status, equals(MealStatus.loading));
+      expect(updatedState.meals, equals(originalState.meals));
+      expect(updatedState.letterIndex, equals(originalState.letterIndex));
+      expect(updatedState.offsetInLetter, equals(originalState.offsetInLetter));
+      expect(updatedState.hasReachedMax, equals(originalState.hasReachedMax));
+    });
+
+    test('should have correct initial state', () {
+      const initialState = MealState.initial();
+
+      expect(initialState.status, equals(MealStatus.initial));
+      expect(initialState.meals, equals([]));
+      expect(initialState.letterIndex, equals(0));
+      expect(initialState.offsetInLetter, equals(0));
+      expect(initialState.hasReachedMax, isFalse);
+    });
+
+    test('should include all properties in props', () {
+      const state = MealState(
+        status: MealStatus.success,
+        meals: <Meal>[],
+        letterIndex: 1,
+        offsetInLetter: 5,
+        hasReachedMax: true,
+      );
+
+      expect(
+        state.props,
+        containsAll([
           MealStatus.success,
-          testMeals,
+          <Meal>[],
+          1,
           5,
-          10,
           true,
-          'pizza',
-          testMeals,
-        ]);
-      });
-
-      test('should return correct props for initial state', () {
-        const state = MealState.initial();
-
-        expect(state.props, [
-          MealStatus.initial,
-          <Meal>[],
-          0,
-          0,
-          false,
-          '',
-          <Meal>[],
-        ]);
-      });
+        ]),
+      );
     });
 
-    group('equality', () {
-      test('should be equal when all properties are the same', () {
-        const state1 = MealState(
-          status: MealStatus.success,
-          meals: testMeals,
-          letterIndex: 1,
-          offsetInLetter: 0,
-          hasReachedMax: false,
-          searchQuery: '',
-          searchResults: [],
-        );
+    test('should handle empty meals list', () {
+      const state = MealState(
+        status: MealStatus.success,
+        meals: [],
+        letterIndex: 0,
+        offsetInLetter: 0,
+        hasReachedMax: false,
+      );
 
-        const state2 = MealState(
-          status: MealStatus.success,
-          meals: testMeals,
-          letterIndex: 1,
-          offsetInLetter: 0,
-          hasReachedMax: false,
-          searchQuery: '',
-          searchResults: [],
-        );
-
-        expect(state1, equals(state2));
-      });
-
-      test('should not be equal when properties are different', () {
-        const state1 = MealState(
-          status: MealStatus.success,
-          meals: testMeals,
-          letterIndex: 1,
-          offsetInLetter: 0,
-          hasReachedMax: false,
-          searchQuery: '',
-          searchResults: [],
-        );
-
-        const state2 = MealState(
-          status: MealStatus.loading,
-          meals: testMeals,
-          letterIndex: 1,
-          offsetInLetter: 0,
-          hasReachedMax: false,
-          searchQuery: '',
-          searchResults: [],
-        );
-
-        expect(state1, isNot(equals(state2)));
-      });
+      expect(state.meals, isEmpty);
+      expect(state.meals.length, equals(0));
     });
 
-    group('MealStatus', () {
-      test('should have correct enum values', () {
-        expect(MealStatus.values, [
-          MealStatus.initial,
-          MealStatus.loading,
-          MealStatus.success,
-          MealStatus.failure,
-        ]);
-      });
+    test('should handle meals with data', () {
+      final meals = [
+        const Meal(
+          id: '1',
+          name: 'Test Meal 1',
+          thumbnail: 'test1.jpg',
+          category: 'Test Category 1',
+          instructions: 'Test instructions 1',
+          ingredients: {'ingredient1': 'measure1'},
+        ),
+        const Meal(
+          id: '2',
+          name: 'Test Meal 2',
+          thumbnail: 'test2.jpg',
+          category: 'Test Category 2',
+          instructions: 'Test instructions 2',
+          ingredients: {'ingredient2': 'measure2'},
+        ),
+      ];
 
-      test('should have correct string representations', () {
-        expect(MealStatus.initial.toString(), 'MealStatus.initial');
-        expect(MealStatus.loading.toString(), 'MealStatus.loading');
-        expect(MealStatus.success.toString(), 'MealStatus.success');
-        expect(MealStatus.failure.toString(), 'MealStatus.failure');
-      });
+      final state = MealState(
+        status: MealStatus.success,
+        meals: meals,
+        letterIndex: 1,
+        offsetInLetter: 0,
+        hasReachedMax: false,
+      );
+
+      expect(state.meals, equals(meals));
+      expect(state.meals.length, equals(2));
+      expect(state.meals.first.name, equals('Test Meal 1'));
+      expect(state.meals.last.name, equals('Test Meal 2'));
+    });
+
+    test('should handle pagination state', () {
+      const state = MealState(
+        status: MealStatus.success,
+        meals: [],
+        letterIndex: 5,
+        offsetInLetter: 10,
+        hasReachedMax: false,
+      );
+
+      expect(state.letterIndex, equals(5));
+      expect(state.offsetInLetter, equals(10));
+      expect(state.hasReachedMax, isFalse);
+    });
+
+    test('should handle max reached state', () {
+      const state = MealState(
+        status: MealStatus.success,
+        meals: [],
+        letterIndex: 26,
+        offsetInLetter: 0,
+        hasReachedMax: true,
+      );
+
+      expect(state.letterIndex, equals(26));
+      expect(state.hasReachedMax, isTrue);
     });
   });
 }

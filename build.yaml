@@ -14,4 +14,6 @@ targets:
           - test/unit/features/search/presentation/bloc/search_bloc_test.dart
           - test/widgets/features/search/presentation/pages/search_page_test.dart
           - test/unit/features/main/presentation/pages/main_page_test.dart
+          - test/widgets/features/meals/presentation/widgets/meal_preview_widget_test.dart
+          - test/widgets/features/search/presentation/widgets/search_results_widget_test.dart
           - test/unit/main_test.dart

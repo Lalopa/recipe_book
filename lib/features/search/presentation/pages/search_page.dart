@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:recipe_book/core/di/injector.dart';
+import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/custom_app_bar_widget.dart';
 import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart';
 import 'package:recipe_book/features/search/presentation/widgets/search_error_widget.dart';
@@ -27,14 +28,19 @@ class SearchPage extends StatelessWidget {
 class SearchPageTestable extends StatelessWidget {
   const SearchPageTestable({
     required this.searchBloc,
+    required this.favoriteBloc,
     super.key,
   });
   final SearchBloc searchBloc;
+  final FavoriteBloc favoriteBloc;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: searchBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: searchBloc),
+        BlocProvider.value(value: favoriteBloc),
+      ],
       child: const SearchView(),
     );
   }
@@ -55,6 +61,11 @@ class _SearchViewState extends State<SearchView> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+
+    // Cargar el estado de favoritos al inicializar
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FavoriteBloc>().add(const FavoritesLoaded());
+    });
   }
 
   @override

@@ -23,7 +23,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
     id: const obx_int.IdUid(1, 3216279247983858522),
     name: 'MealObjectBoxModel',
-    lastPropertyId: const obx_int.IdUid(9, 6032104345557546439),
+    lastPropertyId: const obx_int.IdUid(10, 6573547571161030922),
     flags: 0,
     properties: <obx_int.ModelProperty>[
       obx_int.ModelProperty(
@@ -79,6 +79,12 @@ final _entities = <obx_int.ModelEntity>[
         id: const obx_int.IdUid(9, 6032104345557546439),
         name: 'ingredientsJson',
         type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 6573547571161030922),
+        name: 'isFavorite',
+        type: 1,
         flags: 0,
       ),
     ],
@@ -217,7 +223,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final categoryOffset = fbb.writeString(object.category);
         final instructionsOffset = fbb.writeString(object.instructions);
         final ingredientsJsonOffset = fbb.writeString(object.ingredientsJson);
-        fbb.startTable(10);
+        fbb.startTable(11);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, mealIdOffset);
         fbb.addOffset(2, nameOffset);
@@ -227,6 +233,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         fbb.addInt64(6, object.timestamp.millisecondsSinceEpoch);
         fbb.addInt64(7, object.expiresAt?.millisecondsSinceEpoch);
         fbb.addOffset(8, ingredientsJsonOffset);
+        fbb.addBool(9, object.isFavorite);
         fbb.finish(fbb.endTable());
         return object.id;
       },
@@ -268,6 +275,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final expiresAtParam = expiresAtValue == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(expiresAtValue);
+        final isFavoriteParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          22,
+          false,
+        );
         final object = MealObjectBoxModel(
           mealId: mealIdParam,
           name: nameParam,
@@ -278,6 +291,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           id: idParam,
           thumbnail: thumbnailParam,
           expiresAt: expiresAtParam,
+          isFavorite: isFavoriteParam,
         );
 
         return object;
@@ -385,6 +399,11 @@ class MealObjectBoxModel_ {
   /// See [MealObjectBoxModel.ingredientsJson].
   static final ingredientsJson = obx.QueryStringProperty<MealObjectBoxModel>(
     _entities[0].properties[8],
+  );
+
+  /// See [MealObjectBoxModel.isFavorite].
+  static final isFavorite = obx.QueryBooleanProperty<MealObjectBoxModel>(
+    _entities[0].properties[9],
   );
 }
 

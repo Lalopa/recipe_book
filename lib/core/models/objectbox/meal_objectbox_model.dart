@@ -13,6 +13,7 @@ class MealObjectBoxModel {
     this.id = 0,
     this.thumbnail,
     this.expiresAt,
+    this.isFavorite = false,
   });
 
   factory MealObjectBoxModel.fromMealModel(MealModel meal, {Duration? ttl}) {
@@ -28,8 +29,10 @@ class MealObjectBoxModel {
       ingredientsJson: mapToJson(meal.ingredients),
       timestamp: now,
       expiresAt: expiresAt,
+      // Por defecto no es favorito al crear desde MealModel
     );
   }
+
   @Id()
   int id;
 
@@ -47,6 +50,9 @@ class MealObjectBoxModel {
   @Property(type: PropertyType.date)
   DateTime? expiresAt;
 
+  // Campo para favoritos
+  bool isFavorite;
+
   // Campos para ingredientes (serializados como JSON)
   String ingredientsJson;
 
@@ -58,6 +64,7 @@ class MealObjectBoxModel {
       category: category,
       instructions: instructions,
       ingredients: jsonToMap(ingredientsJson),
+      // No incluimos isFavorite ya que MealModel no lo tiene
     );
   }
 

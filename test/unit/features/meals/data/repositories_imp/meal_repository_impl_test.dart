@@ -207,6 +207,7 @@ void main() {
           buildTestMeal(id: '2', name: 'Chicken Salad'),
         ];
 
+        when(mockLocalDataSource.getCachedSearchResults(query)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.searchMeals(query)).thenAnswer((_) async => mealModels);
 
         // act
@@ -221,6 +222,7 @@ void main() {
       test('should return empty list when remote data source returns empty', () async {
         // arrange
         const query = 'nonexistent';
+        when(mockLocalDataSource.getCachedSearchResults(query)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.searchMeals(query)).thenAnswer((_) async => []);
 
         // act
@@ -235,15 +237,21 @@ void main() {
       test('should propagate errors from remote data source', () async {
         // arrange
         const query = 'chicken';
+        when(mockLocalDataSource.getCachedSearchResults(query)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.searchMeals(query)).thenThrow(Exception('Network error'));
 
         // act & assert
-        expect(
-          () => repository.searchMeals(query),
-          throwsA(isA<Exception>()),
-        );
+        try {
+          await repository.searchMeals(query);
+          fail('Expected exception was not thrown');
+        } on Exception catch (e) {
+          expect(e, isA<Exception>());
+        }
+
+        verify(mockLocalDataSource.getCachedSearchResults(query));
         verify(mockRemoteDataSource.searchMeals(query));
         verifyNoMoreInteractions(mockRemoteDataSource);
+        verifyNoMoreInteractions(mockLocalDataSource);
       });
 
       test('should search with different queries', () async {
@@ -255,6 +263,8 @@ void main() {
         final expectedMeals1 = [buildTestMeal(id: '1', name: 'Chicken Pasta')];
         final expectedMeals2 = [buildTestMeal(id: '2', name: 'Pasta Carbonara')];
 
+        when(mockLocalDataSource.getCachedSearchResults(query1)).thenAnswer((_) async => null);
+        when(mockLocalDataSource.getCachedSearchResults(query2)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.searchMeals(query1)).thenAnswer((_) async => mealModels1);
         when(mockRemoteDataSource.searchMeals(query2)).thenAnswer((_) async => mealModels2);
 
@@ -276,6 +286,7 @@ void main() {
         final mealModels = [buildTestMealModel(id: '1', name: 'Chicken & Pasta')];
         final expectedMeals = [buildTestMeal(id: '1', name: 'Chicken & Pasta')];
 
+        when(mockLocalDataSource.getCachedSearchResults(query)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.searchMeals(query)).thenAnswer((_) async => mealModels);
 
         // act
@@ -293,6 +304,7 @@ void main() {
         final mealModels = [buildTestMealModel(id: '1', name: 'Chicken123')];
         final expectedMeals = [buildTestMeal(id: '1', name: 'Chicken123')];
 
+        when(mockLocalDataSource.getCachedSearchResults(query)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.searchMeals(query)).thenAnswer((_) async => mealModels);
 
         // act
@@ -307,6 +319,7 @@ void main() {
       test('should search with empty query', () async {
         // arrange
         const query = '';
+        when(mockLocalDataSource.getCachedSearchResults(query)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.searchMeals(query)).thenAnswer((_) async => []);
 
         // act

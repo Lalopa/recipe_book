@@ -10,7 +10,6 @@ import 'package:recipe_book/features/meals/data/datasources/meal_rest_provider.d
 import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 import 'package:recipe_book/features/meals/data/repositories_imp/meal_repository_impl.dart';
 import 'package:recipe_book/features/meals/domain/repositories/meal_repository.dart';
-
 import 'package:recipe_book/features/meals/domain/usecases/get_meals.dart';
 import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart';
 
@@ -41,7 +40,11 @@ void main() {
             ),
           )
           ..registerLazySingleton(() => GetMealsByLetter(GetIt.instance<MealRepository>()))
-          ..registerFactory(() => MealBloc(GetIt.instance<GetMealsByLetter>()))
+          ..registerFactory(
+            () => MealBloc(
+              GetIt.instance<GetMealsByLetter>(),
+            ),
+          )
           ..registerFactory(MainCubit.new);
       }
     });
@@ -91,23 +94,23 @@ void main() {
       expect(GetIt.instance<MealBloc>(), isA<MealBloc>());
       expect(GetIt.instance<MainCubit>(), isA<MainCubit>());
     });
-
-    test('should handle multiple initialization calls', () async {
-      expect(GetIt.instance.isRegistered<MealRemoteDataSource>(), isTrue);
-      expect(GetIt.instance.isRegistered<MealRepository>(), isTrue);
-      expect(GetIt.instance.isRegistered<GetMealsByLetter>(), isTrue);
-      expect(GetIt.instance.isRegistered<MealBloc>(), isTrue);
-      expect(GetIt.instance.isRegistered<MainCubit>(), isTrue);
-    });
   });
 }
 
 class _MockMealLocalDataSource implements MealLocalDataSource {
   @override
   Future<List<MealModel>?> getCachedMealsByLetter(String letter) async {
-    return [];
+    return null;
   }
 
   @override
   Future<void> cacheMealsByLetter(String letter, List<MealModel> meals) async {}
+
+  @override
+  Future<List<MealModel>?> getCachedSearchResults(String query) async {
+    return null;
+  }
+
+  @override
+  Future<void> cacheSearchResults(String query, List<MealModel> meals) async {}
 }

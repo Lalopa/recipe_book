@@ -9,8 +9,6 @@ class MealState extends Equatable {
     required this.letterIndex,
     required this.offsetInLetter,
     required this.hasReachedMax,
-    required this.searchQuery,
-    required this.searchResults,
   });
 
   const MealState.initial()
@@ -18,17 +16,13 @@ class MealState extends Equatable {
       meals = const [],
       letterIndex = 0,
       offsetInLetter = 0,
-      hasReachedMax = false,
-      searchQuery = '',
-      searchResults = const [];
+      hasReachedMax = false;
 
   final MealStatus status;
   final List<Meal> meals;
   final int letterIndex;
   final int offsetInLetter;
   final bool hasReachedMax;
-  final String searchQuery;
-  final List<Meal> searchResults;
 
   MealState copyWith({
     MealStatus? status,
@@ -36,8 +30,6 @@ class MealState extends Equatable {
     int? letterIndex,
     int? offsetInLetter,
     bool? hasReachedMax,
-    String? searchQuery,
-    List<Meal>? searchResults,
   }) {
     return MealState(
       status: status ?? this.status,
@@ -45,8 +37,6 @@ class MealState extends Equatable {
       letterIndex: letterIndex ?? this.letterIndex,
       offsetInLetter: offsetInLetter ?? this.offsetInLetter,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-      searchQuery: searchQuery ?? this.searchQuery,
-      searchResults: searchResults ?? this.searchResults,
     );
   }
 
@@ -57,7 +47,5 @@ class MealState extends Equatable {
     letterIndex,
     offsetInLetter,
     hasReachedMax,
-    searchQuery,
-    searchResults,
   ];
 }

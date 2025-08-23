@@ -13,16 +13,3 @@ class MealFetched extends MealEvent {
 class MealRefreshed extends MealEvent {
   const MealRefreshed();
 }
-
-class MealSearched extends MealEvent {
-  const MealSearched(this.query);
-
-  final String query;
-
-  @override
-  List<Object?> get props => [query];
-}
-
-class MealSearchCleared extends MealEvent {
-  const MealSearchCleared();
-}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/custom_app_bar_widget.dart';
 import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart';
@@ -32,21 +33,30 @@ Meal buildTestMeal({
   );
 }
 
-@GenerateMocks([SearchBloc])
+@GenerateMocks([SearchBloc, FavoriteBloc])
 void main() {
   group('SearchPage', () {
     late MockSearchBloc mockSearchBloc;
+    late MockFavoriteBloc mockFavoriteBloc;
 
     setUp(() {
       mockSearchBloc = MockSearchBloc();
+      mockFavoriteBloc = MockFavoriteBloc();
+
       // Configurar el stream para que emita el estado inicial
       when(mockSearchBloc.stream).thenAnswer((_) => Stream.value(const SearchState.initial()));
+
+      // Configurar FavoriteBloc
+      when(mockFavoriteBloc.state).thenReturn(const FavoriteState.initial());
+      when(mockFavoriteBloc.stream).thenAnswer((_) => Stream.value(const FavoriteState.initial()));
+      when(mockFavoriteBloc.add(any)).thenReturn(null);
     });
 
     Widget createTestWidget() {
       return MaterialApp(
         home: SearchPageTestable(
           searchBloc: mockSearchBloc,
+          favoriteBloc: mockFavoriteBloc,
         ),
       );
     }

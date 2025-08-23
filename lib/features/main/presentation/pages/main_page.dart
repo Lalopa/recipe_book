@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipe_book/core/di/injector.dart';
+import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
+import 'package:recipe_book/features/favorites/presentation/pages/favorites_page.dart';
 import 'package:recipe_book/features/main/presentation/cubit/main_cubit.dart';
 import 'package:recipe_book/features/meals/presentation/pages/meals_page.dart';
 import 'package:recipe_book/features/search/presentation/pages/search_page.dart';
@@ -16,13 +18,16 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = const [
     MealsPage(),
     SearchPage(),
-    SizedBox(),
+    FavoritesPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<MainCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => getIt<MainCubit>()),
+        BlocProvider(create: (context) => getIt<FavoriteBloc>()),
+      ],
       child: BlocBuilder<MainCubit, int>(
         builder: (context, selectedIndex) {
           return Scaffold(

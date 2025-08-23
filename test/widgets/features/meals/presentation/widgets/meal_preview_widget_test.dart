@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/meal_image_widget.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/meal_preview_widget.dart';
 
+import 'meal_preview_widget_test.mocks.dart';
+
+@GenerateMocks([FavoriteBloc])
 void main() {
   group('MealPreviewWidget', () {
     late Meal testMeal;
     late Meal favoriteMeal;
+    late MockFavoriteBloc mockFavoriteBloc;
 
     setUp(() {
       testMeal = const Meal(
@@ -28,12 +36,22 @@ void main() {
         ingredients: {'ingredient1': 'amount1'},
         isFavorite: true,
       );
+
+      mockFavoriteBloc = MockFavoriteBloc();
+      when(mockFavoriteBloc.state).thenReturn(const FavoriteState.initial());
+      when(mockFavoriteBloc.stream).thenAnswer((_) => Stream.value(const FavoriteState.initial()));
+      when(mockFavoriteBloc.add(any)).thenReturn(null);
     });
 
     Widget createTestWidget({required Meal meal}) {
-      return MaterialApp(
-        home: Scaffold(
-          body: MealPreviewWidget(meal: meal),
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider<FavoriteBloc>.value(value: mockFavoriteBloc),
+        ],
+        child: MaterialApp(
+          home: Scaffold(
+            body: MealPreviewWidget(meal: meal),
+          ),
         ),
       );
     }
@@ -62,35 +80,39 @@ void main() {
     testWidgets('should display favorite icon correctly when meal is not favorite', (tester) async {
       await tester.pumpWidget(createTestWidget(meal: testMeal));
 
-      expect(find.byIcon(Icons.favorite), findsOneWidget);
+      // The FavoriteButtonWidget should show favorite_border when not favorite
       expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+      expect(find.byIcon(Icons.favorite), findsNothing);
 
-      final favoriteIcon = tester.widget<Icon>(
-        find.byIcon(Icons.favorite),
-      );
       final favoriteBorderIcon = tester.widget<Icon>(
         find.byIcon(Icons.favorite_border),
       );
 
-      expect(favoriteIcon.color, Colors.white);
-      expect(favoriteBorderIcon.color, Colors.black);
+      expect(favoriteBorderIcon.color, Colors.grey);
     });
 
     testWidgets('should display favorite icon correctly when meal is favorite', (tester) async {
+      // Configure mock to return favorite status for this meal
+      final favoriteState = FavoriteState(
+        status: FavoriteStatus.initial,
+        favoriteMeals: const [],
+        isLoading: false,
+        favoriteStatuses: {favoriteMeal.id: true},
+      );
+      when(mockFavoriteBloc.state).thenReturn(favoriteState);
+      when(mockFavoriteBloc.stream).thenAnswer((_) => Stream.value(favoriteState));
+
       await tester.pumpWidget(createTestWidget(meal: favoriteMeal));
 
+      // The FavoriteButtonWidget should show favorite when is favorite
       expect(find.byIcon(Icons.favorite), findsOneWidget);
-      expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+      expect(find.byIcon(Icons.favorite_border), findsNothing);
 
       final favoriteIcon = tester.widget<Icon>(
         find.byIcon(Icons.favorite),
       );
-      final favoriteBorderIcon = tester.widget<Icon>(
-        find.byIcon(Icons.favorite_border),
-      );
 
       expect(favoriteIcon.color, Colors.red);
-      expect(favoriteBorderIcon.color, Colors.white);
     });
 
     testWidgets('should have correct card styling', (tester) async {
@@ -182,24 +204,19 @@ void main() {
         find.byType(Positioned),
       );
 
-      expect(positionedWidget.child, isA<Align>());
-
-      final alignWidget = positionedWidget.child as Align;
-      expect(alignWidget.alignment, Alignment.topRight);
+      expect(positionedWidget.top, 8);
+      expect(positionedWidget.right, 8);
+      expect(positionedWidget.child, isA<BlocBuilder<FavoriteBloc, FavoriteState>>());
     });
 
     testWidgets('should have correct favorite icon size', (tester) async {
       await tester.pumpWidget(createTestWidget(meal: testMeal));
 
-      final favoriteIcon = tester.widget<Icon>(
-        find.byIcon(Icons.favorite),
-      );
       final favoriteBorderIcon = tester.widget<Icon>(
         find.byIcon(Icons.favorite_border),
       );
 
-      expect(favoriteIcon.size, 30);
-      expect(favoriteBorderIcon.size, 30);
+      expect(favoriteBorderIcon.size, 20);
     });
 
     testWidgets('should handle long meal names with ellipsis', (tester) async {
@@ -247,14 +264,16 @@ void main() {
     testWidgets('should have correct gesture detector setup', (tester) async {
       await tester.pumpWidget(createTestWidget(meal: testMeal));
 
-      expect(find.byType(GestureDetector), findsOneWidget);
+      // Now there are multiple GestureDetectors (one for the card, one for the favorite button)
+      expect(find.byType(GestureDetector), findsAtLeastNWidgets(1));
 
-      // Verificar que el GestureDetector envuelve todo el contenido
-      final gestureDetector = tester.widget<GestureDetector>(
+      // Verificar que hay GestureDetectors con funcionalidad
+      final gestureDetectors = tester.widgetList<GestureDetector>(
         find.byType(GestureDetector),
       );
 
-      expect(gestureDetector.onTap, isNotNull);
+      expect(gestureDetectors.length, greaterThanOrEqualTo(1));
+      expect(gestureDetectors.first.onTap, isNotNull);
     });
   });
 }

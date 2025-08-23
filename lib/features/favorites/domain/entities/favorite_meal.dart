@@ -1,23 +1,24 @@
 import 'package:equatable/equatable.dart';
 
-class Meal extends Equatable {
-  const Meal({
+class FavoriteMeal extends Equatable {
+  const FavoriteMeal({
     required this.id,
     required this.name,
     required this.thumbnail,
     required this.category,
     required this.instructions,
     required this.ingredients,
-    this.isFavorite = false,
+    required this.addedAt,
   });
-  const Meal.empty()
+
+  const FavoriteMeal.empty()
     : id = '',
       name = '',
       thumbnail = null,
       category = '',
       instructions = '',
       ingredients = const {},
-      isFavorite = false;
+      addedAt = null;
 
   final String id;
   final String name;
@@ -25,25 +26,25 @@ class Meal extends Equatable {
   final String category;
   final String instructions;
   final Map<String, String> ingredients;
-  final bool isFavorite;
+  final DateTime? addedAt;
 
-  Meal copyWith({
+  FavoriteMeal copyWith({
     String? id,
     String? name,
     String? thumbnail,
     String? category,
     String? instructions,
     Map<String, String>? ingredients,
-    bool? isFavorite,
+    DateTime? addedAt,
   }) {
-    return Meal(
+    return FavoriteMeal(
       id: id ?? this.id,
       name: name ?? this.name,
       thumbnail: thumbnail ?? this.thumbnail,
       category: category ?? this.category,
       instructions: instructions ?? this.instructions,
       ingredients: ingredients ?? this.ingredients,
-      isFavorite: isFavorite ?? this.isFavorite,
+      addedAt: addedAt ?? this.addedAt,
     );
   }
 
@@ -55,6 +56,6 @@ class Meal extends Equatable {
     category,
     instructions,
     ingredients,
-    isFavorite,
+    addedAt,
   ];
 }

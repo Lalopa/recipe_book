@@ -32,7 +32,7 @@ class MealBloc extends Bloc<MealEvent, MealState> {
     add(const MealFetched());
   }
 
-  Future<void> _onFetched(MealFetched event, Emitter<MealState> emit) async {
+  Future<void> _onFetched(MealEvent event, Emitter<MealState> emit) async {
     if (state.hasReachedMax || state.status == MealStatus.loading) return;
 
     emit(state.copyWith(status: MealStatus.loading));

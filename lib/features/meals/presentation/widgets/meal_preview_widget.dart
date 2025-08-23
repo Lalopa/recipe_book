@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipe_book/core/theme/theme.dart';
+import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
+import 'package:recipe_book/features/favorites/presentation/widgets/favorite_button_widget.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/meal_image_widget.dart';
 
@@ -75,25 +78,17 @@ class MealPreviewWidget extends StatelessWidget {
               ],
             ),
             Positioned(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Stack(
-                    children: [
-                      Icon(
-                        Icons.favorite,
-                        color: meal.isFavorite ? Colors.red : Colors.white,
-                        size: 30,
-                      ),
-                      Icon(
-                        Icons.favorite_border,
-                        color: meal.isFavorite ? Colors.white : Colors.black,
-                        size: 30,
-                      ),
-                    ],
-                  ),
-                ),
+              top: 8,
+              right: 8,
+              child: BlocBuilder<FavoriteBloc, FavoriteState>(
+                builder: (context, state) {
+                  final isFavorite = state.favoriteStatuses[meal.id] ?? false;
+                  return FavoriteButtonWidget(
+                    mealId: meal.id,
+                    isFavorite: isFavorite,
+                    size: 20,
+                  );
+                },
               ),
             ),
           ],
