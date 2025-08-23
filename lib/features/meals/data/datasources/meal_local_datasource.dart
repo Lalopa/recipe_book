@@ -12,7 +12,8 @@ abstract class MealLocalDataSource {
 }
 
 class MealLocalDataSourceImpl implements MealLocalDataSource {
-  final ObjectBoxCacheManager _cache = ObjectBoxCacheManager.instance;
+  MealLocalDataSourceImpl(this._cache);
+  final ObjectBoxCacheManager _cache;
 
   @override
   Future<List<MealModel>?> getCachedMealsByLetter(String letter) async {
