@@ -14,11 +14,6 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
   }
 
   @override
-  Future<void> setFavorite({required String mealId, required bool isFavorite}) async {
-    await localDataSource.setFavorite(mealId: mealId, isFavorite: isFavorite);
-  }
-
-  @override
   Future<List<FavoriteMeal>> getFavoriteMeals() async {
     final models = await localDataSource.getFavoriteMeals();
     return models.map((m) => m.toEntity()).toList();

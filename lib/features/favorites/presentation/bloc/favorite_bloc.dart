@@ -30,11 +30,12 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     Emitter<FavoriteState> emit,
   ) async {
     try {
-      emit(state.copyWith(isLoading: true));
+      emit(state.copyWith(status: FavoriteStatus.loading, isLoading: true));
       final favoriteMeals = await _getFavoriteMeals();
 
       emit(
         state.copyWith(
+          status: FavoriteStatus.success,
           favoriteMeals: favoriteMeals,
           isLoading: false,
           favoriteStatuses: {
@@ -44,7 +45,7 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
         ),
       );
     } on Exception catch (_) {
-      emit(state.copyWith(isLoading: false));
+      emit(state.copyWith(status: FavoriteStatus.failure, isLoading: false));
     }
   }
 
@@ -78,6 +79,7 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       final isFavorite = await _checkFavoriteStatus(event.mealId);
       emit(
         state.copyWith(
+          status: FavoriteStatus.success,
           favoriteStatuses: {
             ...state.favoriteStatuses,
             event.mealId: isFavorite,
