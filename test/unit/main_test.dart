@@ -14,16 +14,13 @@ void main() {
   group('Main App', () {
     late MockGetMealsByLetter mockGetMealsByLetter;
 
-    setUp(() {
+    setUp(() async {
       TestWidgetsFlutterBinding.ensureInitialized();
-      GetIt.instance.reset();
+      await GetIt.instance.reset();
 
-      // Mock the dependencies
       mockGetMealsByLetter = MockGetMealsByLetter();
       when(mockGetMealsByLetter(any)).thenAnswer((_) async => []);
-
-      // Register mocks instead of real implementations
-      GetIt.instance.registerLazySingleton<GetMealsByLetter>(() => mockGetMealsByLetter);
+      await initDependencies();
     });
 
     tearDown(() {
@@ -31,21 +28,14 @@ void main() {
     });
 
     testWidgets('should build MyApp widget', (WidgetTester tester) async {
-      await initDependencies();
-
-      // Build our app and trigger a frame.
       await tester.pumpWidget(const app.MyApp());
 
-      // Wait for any pending operations to complete
       await tester.pumpAndSettle();
 
-      // Verify that the app builds without errors
       expect(find.byType(MaterialApp), findsOneWidget);
     });
 
     testWidgets('should have correct app title', (WidgetTester tester) async {
-      await initDependencies();
-
       await tester.pumpWidget(const app.MyApp());
       await tester.pumpAndSettle();
 
@@ -54,8 +44,6 @@ void main() {
     });
 
     testWidgets('should have theme configured', (WidgetTester tester) async {
-      await initDependencies();
-
       await tester.pumpWidget(const app.MyApp());
       await tester.pumpAndSettle();
 
@@ -64,8 +52,6 @@ void main() {
     });
 
     testWidgets('should have route generation configured', (WidgetTester tester) async {
-      await initDependencies();
-
       await tester.pumpWidget(const app.MyApp());
       await tester.pumpAndSettle();
 
@@ -74,8 +60,6 @@ void main() {
     });
 
     testWidgets('should have initial route configured', (WidgetTester tester) async {
-      await initDependencies();
-
       await tester.pumpWidget(const app.MyApp());
       await tester.pumpAndSettle();
 

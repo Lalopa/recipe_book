@@ -11,16 +11,13 @@ import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart';
 
 void main() {
   group('Dependency Injection', () {
-    setUp(() {
+    setUp(() async {
       WidgetsFlutterBinding.ensureInitialized();
-      GetIt.instance.reset();
+      await GetIt.instance.reset();
+      await initDependencies();
     });
 
     test('should initialize dependencies successfully', () async {
-      // act
-      await initDependencies();
-
-      // assert
       expect(GetIt.instance.isRegistered<MealRemoteDataSource>(), isTrue);
       expect(GetIt.instance.isRegistered<MealRepository>(), isTrue);
       expect(GetIt.instance.isRegistered<GetMealsByLetter>(), isTrue);
@@ -29,60 +26,36 @@ void main() {
     });
 
     test('should register MealRemoteDataSource as singleton', () async {
-      // act
-      await initDependencies();
-
-      // assert
       final instance1 = GetIt.instance<MealRemoteDataSource>();
       final instance2 = GetIt.instance<MealRemoteDataSource>();
       expect(identical(instance1, instance2), isTrue);
     });
 
     test('should register MealRepository as singleton', () async {
-      // act
-      await initDependencies();
-
-      // assert
       final instance1 = GetIt.instance<MealRepository>();
       final instance2 = GetIt.instance<MealRepository>();
       expect(identical(instance1, instance2), isTrue);
     });
 
     test('should register GetMealsByLetter as singleton', () async {
-      // act
-      await initDependencies();
-
-      // assert
       final instance1 = GetIt.instance<GetMealsByLetter>();
       final instance2 = GetIt.instance<GetMealsByLetter>();
       expect(identical(instance1, instance2), isTrue);
     });
 
     test('should register MealBloc as factory', () async {
-      // act
-      await initDependencies();
-
-      // assert
       final instance1 = GetIt.instance<MealBloc>();
       final instance2 = GetIt.instance<MealBloc>();
       expect(identical(instance1, instance2), isFalse);
     });
 
     test('should register MainCubit as factory', () async {
-      // act
-      await initDependencies();
-
-      // assert
       final instance1 = GetIt.instance<MainCubit>();
       final instance2 = GetIt.instance<MainCubit>();
       expect(identical(instance1, instance2), isFalse);
     });
 
     test('should return correct types for registered dependencies', () async {
-      // act
-      await initDependencies();
-
-      // assert
       expect(GetIt.instance<MealRemoteDataSource>(), isA<MealRemoteDataSource>());
       expect(GetIt.instance<MealRepository>(), isA<MealRepositoryImpl>());
       expect(GetIt.instance<GetMealsByLetter>(), isA<GetMealsByLetter>());
@@ -91,10 +64,6 @@ void main() {
     });
 
     test('should handle multiple initialization calls', () async {
-      // act
-      await initDependencies();
-
-      // assert
       expect(GetIt.instance.isRegistered<MealRemoteDataSource>(), isTrue);
       expect(GetIt.instance.isRegistered<MealRepository>(), isTrue);
       expect(GetIt.instance.isRegistered<GetMealsByLetter>(), isTrue);

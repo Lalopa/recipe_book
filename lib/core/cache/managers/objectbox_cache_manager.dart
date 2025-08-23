@@ -15,7 +15,11 @@ class ObjectBoxCacheManager {
     _mealBox = store.box<MealObjectBoxModel>();
   }
 
-  Future<void> cacheMeals(String key, List<MealModel> meals, {Duration? ttl}) async {
+  Future<void> cacheMeals(
+    String key,
+    List<MealModel> meals, {
+    Duration? ttl,
+  }) async {
     try {
       // Limpiar cache expirado
       _cleanExpiredMeals();
@@ -25,7 +29,10 @@ class ObjectBoxCacheManager {
         final objectBoxModel = MealObjectBoxModel.fromMealModel(meal, ttl: ttl);
 
         // Verificar si ya existe y actualizar
-        final existing = _mealBox.query(MealObjectBoxModel_.mealId.equals(meal.id)).build().findFirst();
+        final existing = _mealBox
+            .query(MealObjectBoxModel_.mealId.equals(meal.id))
+            .build()
+            .findFirst();
         if (existing != null) {
           objectBoxModel.id = existing.id;
         }
@@ -42,7 +49,10 @@ class ObjectBoxCacheManager {
   /// Obtiene un meal específico por ID
   Future<MealModel?> getCachedMeal(String mealId) async {
     try {
-      final meal = _mealBox.query(MealObjectBoxModel_.mealId.equals(mealId)).build().findFirst();
+      final meal = _mealBox
+          .query(MealObjectBoxModel_.mealId.equals(mealId))
+          .build()
+          .findFirst();
 
       if (meal == null || meal.isExpired) {
         if (meal?.isExpired ?? false) {
