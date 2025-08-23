@@ -7,8 +7,10 @@ import 'dart:async' as _i4;
 
 import 'package:bloc/bloc.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart' as _i3;
-import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart' as _i2;
+import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart'
+    as _i3;
+import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart'
+    as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -25,11 +27,13 @@ import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart' 
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeSearchState_0 extends _i1.SmartFake implements _i2.SearchState {
-  _FakeSearchState_0(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
+  _FakeSearchState_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFavoriteState_1 extends _i1.SmartFake implements _i3.FavoriteState {
-  _FakeFavoriteState_1(Object parent, Invocation parentInvocation) : super(parent, parentInvocation);
+  _FakeFavoriteState_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [SearchBloc].
@@ -57,7 +61,9 @@ class MockSearchBloc extends _i1.Mock implements _i2.SearchBloc {
           as _i4.Stream<_i2.SearchState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   void add(_i2.SearchEvent? event) => super.noSuchMethod(
@@ -147,7 +153,9 @@ class MockFavoriteBloc extends _i1.Mock implements _i3.FavoriteBloc {
           as _i4.Stream<_i3.FavoriteState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   void add(_i3.FavoriteEvent? event) => super.noSuchMethod(
