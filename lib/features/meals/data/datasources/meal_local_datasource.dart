@@ -31,13 +31,13 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
 
   @override
   Future<List<MealModel>?> getCachedSearchResults(String query) async {
-    final normalizedQuery = _normalizeQuery(query);
+    final normalizedQuery = normalizeQuery(query);
     return _cache.getCachedMeals(normalizedQuery);
   }
 
   @override
   Future<void> cacheSearchResults(String query, List<MealModel> meals) async {
-    final normalizedQuery = _normalizeQuery(query);
+    final normalizedQuery = normalizeQuery(query);
     await _cache.cacheMeals(
       normalizedQuery,
       meals,
@@ -45,7 +45,7 @@ class MealLocalDataSourceImpl implements MealLocalDataSource {
     );
   }
 
-  String _normalizeQuery(String query) {
+  String normalizeQuery(String query) {
     return query.trim().toLowerCase();
   }
 }
