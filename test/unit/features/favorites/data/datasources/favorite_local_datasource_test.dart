@@ -21,16 +21,21 @@ void main() {
     group('toggleFavorite', () {
       const testMealId = 'test-meal-id';
 
-      test('should call cache manager toggleFavorite with correct mealId', () async {
-        // arrange
-        when(mockCacheManager.toggleFavorite(testMealId)).thenAnswer((_) async {});
+      test(
+        'should call cache manager toggleFavorite with correct mealId',
+        () async {
+          // arrange
+          when(
+            mockCacheManager.toggleFavorite(testMealId),
+          ).thenAnswer((_) async {});
 
-        // act
-        await dataSource.toggleFavorite(testMealId);
+          // act
+          await dataSource.toggleFavorite(testMealId);
 
-        // assert
-        verify(mockCacheManager.toggleFavorite(testMealId)).called(1);
-      });
+          // assert
+          verify(mockCacheManager.toggleFavorite(testMealId)).called(1);
+        },
+      );
     });
 
     group('isFavorite', () {
@@ -38,7 +43,9 @@ void main() {
 
       test('should return true when meal is favorite', () async {
         // arrange
-        when(mockCacheManager.isFavorite(testMealId)).thenAnswer((_) async => true);
+        when(
+          mockCacheManager.isFavorite(testMealId),
+        ).thenAnswer((_) async => true);
 
         // act
         final result = await dataSource.isFavorite(testMealId);
@@ -50,7 +57,9 @@ void main() {
 
       test('should return false when meal is not favorite', () async {
         // arrange
-        when(mockCacheManager.isFavorite(testMealId)).thenAnswer((_) async => false);
+        when(
+          mockCacheManager.isFavorite(testMealId),
+        ).thenAnswer((_) async => false);
 
         // act
         final result = await dataSource.isFavorite(testMealId);
@@ -85,7 +94,9 @@ void main() {
           ),
         ];
 
-        when(mockCacheManager.getFavoriteMeals()).thenAnswer((_) async => testFavoriteMeals);
+        when(
+          mockCacheManager.getFavoriteMeals(),
+        ).thenAnswer((_) async => testFavoriteMeals);
 
         // act
         final result = await dataSource.getFavoriteMeals();
@@ -97,7 +108,9 @@ void main() {
 
       test('should return empty list when no favorite meals exist', () async {
         // arrange
-        when(mockCacheManager.getFavoriteMeals()).thenAnswer((_) async => <FavoriteMealModel>[]);
+        when(
+          mockCacheManager.getFavoriteMeals(),
+        ).thenAnswer((_) async => <FavoriteMealModel>[]);
 
         // act
         final result = await dataSource.getFavoriteMeals();
