@@ -1,0 +1,94 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:3216279247983858522",
+      "lastPropertyId": "9:6032104345557546439",
+      "name": "MealObjectBoxModel",
+      "properties": [
+        {
+          "id": "1:1909083804762316072",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:416925939696230008",
+          "name": "mealId",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "1:5680977694177299841"
+        },
+        {
+          "id": "3:2465585319617347433",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "4:697167662493896821",
+          "name": "thumbnail",
+          "type": 9
+        },
+        {
+          "id": "5:295135431415565913",
+          "name": "category",
+          "type": 9
+        },
+        {
+          "id": "6:8091539931480802533",
+          "name": "instructions",
+          "type": 9
+        },
+        {
+          "id": "7:3577515846377971443",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "8:6880616342907743180",
+          "name": "expiresAt",
+          "type": 10
+        },
+        {
+          "id": "9:6032104345557546439",
+          "name": "ingredientsJson",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "4:1479326570417141255",
+  "lastIndexId": "4:690130998135355450",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    5944868737443677518,
+    9126563289174553222,
+    1479326570417141255
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    3503355529017192638,
+    4537691885222050670,
+    2541940041479011029,
+    357997349123447813,
+    862877427245714856,
+    1553656053260174190,
+    649001311484237065,
+    6339342438387178180,
+    1049942567777903413,
+    4765664448616622737,
+    2950491887036591377,
+    4915985329516389903,
+    8546928726471246976,
+    6851881272290672028,
+    7527444281069174428
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

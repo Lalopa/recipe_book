@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:recipe_book/core/di/injector.dart';
@@ -11,6 +12,7 @@ import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart';
 void main() {
   group('Dependency Injection', () {
     setUp(() {
+      WidgetsFlutterBinding.ensureInitialized();
       GetIt.instance.reset();
     });
 
