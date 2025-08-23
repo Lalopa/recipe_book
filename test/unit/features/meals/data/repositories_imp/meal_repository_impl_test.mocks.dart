@@ -6,6 +6,8 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:recipe_book/features/meals/data/datasources/meal_local_datasource.dart'
+    as _i5;
 import 'package:recipe_book/features/meals/data/datasources/meal_remote_datasource.dart'
     as _i2;
 import 'package:recipe_book/features/meals/data/models/meal_model.dart' as _i4;
@@ -52,4 +54,34 @@ class MockMealRemoteDataSource extends _i1.Mock
             ),
           )
           as _i3.Future<List<_i4.MealModel>>);
+}
+
+/// A class which mocks [MealLocalDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMealLocalDataSource extends _i1.Mock
+    implements _i5.MealLocalDataSource {
+  MockMealLocalDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Future<List<_i4.MealModel>?> getCachedMealsByLetter(String? letter) =>
+      (super.noSuchMethod(
+            Invocation.method(#getCachedMealsByLetter, [letter]),
+            returnValue: _i3.Future<List<_i4.MealModel>?>.value(),
+          )
+          as _i3.Future<List<_i4.MealModel>?>);
+
+  @override
+  _i3.Future<void> cacheMealsByLetter(
+    String? letter,
+    List<_i4.MealModel>? meals,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#cacheMealsByLetter, [letter, meals]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 }

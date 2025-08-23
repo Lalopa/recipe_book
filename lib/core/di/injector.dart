@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:recipe_book/core/di/dio_config.dart';
 import 'package:recipe_book/core/di/objectbox_config.dart';
 import 'package:recipe_book/features/main/presentation/cubit/main_cubit.dart';
+import 'package:recipe_book/features/meals/data/datasources/meal_local_datasource.dart';
 import 'package:recipe_book/features/meals/data/datasources/meal_remote_datasource.dart';
 import 'package:recipe_book/features/meals/data/datasources/meal_rest_provider.dart';
 import 'package:recipe_book/features/meals/data/repositories_imp/meal_repository_impl.dart';
@@ -22,9 +23,12 @@ Future<void> initDependencies() async {
     ..registerLazySingleton<MealRemoteDataSource>(
       () => MealRemoteDataSourceImpl(getIt()),
     )
+    ..registerLazySingleton<MealLocalDataSource>(
+      MealLocalDataSourceImpl.new,
+    )
     // Repositories
     ..registerLazySingleton<MealRepository>(
-      () => MealRepositoryImpl(getIt()),
+      () => MealRepositoryImpl(getIt(), getIt()),
     )
     // Usecase
     ..registerLazySingleton(() => GetMealsByLetter(getIt()))

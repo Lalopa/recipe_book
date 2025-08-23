@@ -20,7 +20,7 @@ class ObjectBoxConfig {
 
     try {
       final docsDir = await _getDocumentsDirectory();
-      final objectboxDir = path.join(docsDir.path, 'objectbox');
+      final objectboxDir = path.join(docsDir.path, 'objectbox-database');
 
       _store = await openStore(directory: objectboxDir);
 

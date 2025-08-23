@@ -15,6 +15,7 @@ import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'core/models/objectbox/meal_objectbox_model.dart';
+import 'core/models/objectbox/search_cache_objectbox_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -84,6 +85,47 @@ final _entities = <obx_int.ModelEntity>[
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(5, 8968588156299457652),
+    name: 'SearchObjectBoxModel',
+    lastPropertyId: const obx_int.IdUid(5, 7124170131564438798),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 9196602285289620889),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 2112773283773912307),
+        name: 'searchKey',
+        type: 9,
+        flags: 2080,
+        indexId: const obx_int.IdUid(5, 4558635282602567955),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 3669008489968697198),
+        name: 'dataJson',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 3272055426762604712),
+        name: 'timestamp',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 7124170131564438798),
+        name: 'expiresAt',
+        type: 10,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -124,8 +166,8 @@ Future<obx.Store> openStore({
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(4, 1479326570417141255),
-    lastIndexId: const obx_int.IdUid(4, 690130998135355450),
+    lastEntityId: const obx_int.IdUid(5, 8968588156299457652),
+    lastIndexId: const obx_int.IdUid(5, 4558635282602567955),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [
@@ -241,6 +283,58 @@ obx_int.ModelDefinition getObjectBoxModel() {
         return object;
       },
     ),
+    SearchObjectBoxModel: obx_int.EntityDefinition<SearchObjectBoxModel>(
+      model: _entities[1],
+      toOneRelations: (SearchObjectBoxModel object) => [],
+      toManyRelations: (SearchObjectBoxModel object) => {},
+      getId: (SearchObjectBoxModel object) => object.id,
+      setId: (SearchObjectBoxModel object, int id) {
+        object.id = id;
+      },
+      objectToFB: (SearchObjectBoxModel object, fb.Builder fbb) {
+        final searchKeyOffset = fbb.writeString(object.searchKey);
+        final dataJsonOffset = fbb.writeString(object.dataJson);
+        fbb.startTable(6);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, searchKeyOffset);
+        fbb.addOffset(2, dataJsonOffset);
+        fbb.addInt64(3, object.timestamp.millisecondsSinceEpoch);
+        fbb.addInt64(4, object.expiresAt.millisecondsSinceEpoch);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final searchKeyParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final dataJsonParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final timestampParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0),
+        );
+        final expiresAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0),
+        );
+        final idParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final object = SearchObjectBoxModel(
+          searchKey: searchKeyParam,
+          dataJson: dataJsonParam,
+          timestamp: timestampParam,
+          expiresAt: expiresAtParam,
+          id: idParam,
+        );
+
+        return object;
+      },
+    ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -291,5 +385,33 @@ class MealObjectBoxModel_ {
   /// See [MealObjectBoxModel.ingredientsJson].
   static final ingredientsJson = obx.QueryStringProperty<MealObjectBoxModel>(
     _entities[0].properties[8],
+  );
+}
+
+/// [SearchObjectBoxModel] entity fields to define ObjectBox queries.
+class SearchObjectBoxModel_ {
+  /// See [SearchObjectBoxModel.id].
+  static final id = obx.QueryIntegerProperty<SearchObjectBoxModel>(
+    _entities[1].properties[0],
+  );
+
+  /// See [SearchObjectBoxModel.searchKey].
+  static final searchKey = obx.QueryStringProperty<SearchObjectBoxModel>(
+    _entities[1].properties[1],
+  );
+
+  /// See [SearchObjectBoxModel.dataJson].
+  static final dataJson = obx.QueryStringProperty<SearchObjectBoxModel>(
+    _entities[1].properties[2],
+  );
+
+  /// See [SearchObjectBoxModel.timestamp].
+  static final timestamp = obx.QueryDateProperty<SearchObjectBoxModel>(
+    _entities[1].properties[3],
+  );
+
+  /// See [SearchObjectBoxModel.expiresAt].
+  static final expiresAt = obx.QueryDateProperty<SearchObjectBoxModel>(
+    _entities[1].properties[4],
   );
 }

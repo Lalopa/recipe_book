@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:recipe_book/core/di/objectbox_config.dart';
 import 'package:recipe_book/core/models/objectbox/meal_objectbox_model.dart';
+import 'package:recipe_book/core/models/objectbox/search_cache_objectbox_model.dart';
 import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 import 'package:recipe_book/objectbox.g.dart';
 
@@ -9,10 +13,17 @@ class ObjectBoxCacheManager {
   static final ObjectBoxCacheManager _instance = ObjectBoxCacheManager._();
   static ObjectBoxCacheManager get instance => _instance;
 
-  late Box<MealObjectBoxModel> _mealBox;
+  Box<MealObjectBoxModel>? _mealBox;
+  Box<SearchObjectBoxModel>? _searchCacheBox;
 
-  void initialize(Store store) {
-    _mealBox = store.box<MealObjectBoxModel>();
+  Box<MealObjectBoxModel> get _mealBoxInstance {
+    _mealBox ??= ObjectBoxConfig.store.box<MealObjectBoxModel>();
+    return _mealBox!;
+  }
+
+  Box<SearchObjectBoxModel> get _searchCacheBoxInstance {
+    _searchCacheBox ??= ObjectBoxConfig.store.box<SearchObjectBoxModel>();
+    return _searchCacheBox!;
   }
 
   Future<void> cacheMeals(
@@ -21,15 +32,12 @@ class ObjectBoxCacheManager {
     Duration? ttl,
   }) async {
     try {
-      // Limpiar cache expirado
       _cleanExpiredMeals();
 
-      // Convertir y guardar cada meal
       for (final meal in meals) {
         final objectBoxModel = MealObjectBoxModel.fromMealModel(meal, ttl: ttl);
 
-        // Verificar si ya existe y actualizar
-        final existing = _mealBox
+        final existing = _mealBoxInstance
             .query(MealObjectBoxModel_.mealId.equals(meal.id))
             .build()
             .findFirst();
@@ -37,8 +45,27 @@ class ObjectBoxCacheManager {
           objectBoxModel.id = existing.id;
         }
 
-        _mealBox.put(objectBoxModel);
+        _mealBoxInstance.put(objectBoxModel);
       }
+
+      final searchEntry = SearchObjectBoxModel(
+        searchKey: key,
+        dataJson: jsonEncode(meals.map((m) => m.toJson()).toList()),
+        timestamp: DateTime.now(),
+        expiresAt: ttl != null
+            ? DateTime.now().add(ttl)
+            : DateTime.now().add(const Duration(hours: 1)),
+      );
+
+      final existingSearch = _searchCacheBoxInstance
+          .query(SearchObjectBoxModel_.searchKey.equals(key))
+          .build()
+          .findFirst();
+      if (existingSearch != null) {
+        searchEntry.id = existingSearch.id;
+      }
+
+      _searchCacheBoxInstance.put(searchEntry);
     } on Exception catch (e) {
       if (kDebugMode) {
         print('Error caching meals: $e');
@@ -46,17 +73,42 @@ class ObjectBoxCacheManager {
     }
   }
 
-  /// Obtiene un meal específico por ID
+  Future<List<MealModel>?> getCachedMeals(String key) async {
+    try {
+      final searchEntry = _searchCacheBoxInstance
+          .query(SearchObjectBoxModel_.searchKey.equals(key))
+          .build()
+          .findFirst();
+
+      if (searchEntry == null || searchEntry.isExpired) {
+        if (searchEntry?.isExpired ?? false) {
+          _searchCacheBoxInstance.remove(searchEntry!.id);
+        }
+        return null;
+      }
+
+      final mealsJson = jsonDecode(searchEntry.dataJson) as List;
+      return mealsJson
+          .map((json) => MealModel.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print('Error getting cached meals: $e');
+      }
+      return null;
+    }
+  }
+
   Future<MealModel?> getCachedMeal(String mealId) async {
     try {
-      final meal = _mealBox
+      final meal = _mealBoxInstance
           .query(MealObjectBoxModel_.mealId.equals(mealId))
           .build()
           .findFirst();
 
       if (meal == null || meal.isExpired) {
         if (meal?.isExpired ?? false) {
-          _mealBox.remove(meal!.id);
+          _mealBoxInstance.remove(meal!.id);
         }
         return null;
       }
@@ -73,7 +125,7 @@ class ObjectBoxCacheManager {
   void _cleanExpiredMeals() {
     try {
       // Obtener todos los meals y filtrar los expirados manualmente
-      final allMeals = _mealBox.query().build().find();
+      final allMeals = _mealBoxInstance.query().build().find();
       final expiredMeals = <MealObjectBoxModel>[];
 
       for (final meal in allMeals) {
@@ -83,7 +135,7 @@ class ObjectBoxCacheManager {
       }
 
       for (final meal in expiredMeals) {
-        _mealBox.remove(meal.id);
+        _mealBoxInstance.remove(meal.id);
       }
 
       if (kDebugMode) {

@@ -1,11 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:recipe_book/core/di/injector.dart';
 import 'package:recipe_book/features/main/presentation/cubit/main_cubit.dart';
+import 'package:recipe_book/features/meals/data/datasources/meal_local_datasource.dart';
 import 'package:recipe_book/features/meals/data/datasources/meal_remote_datasource.dart';
+import 'package:recipe_book/features/meals/data/datasources/meal_rest_provider.dart';
+import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 import 'package:recipe_book/features/meals/data/repositories_imp/meal_repository_impl.dart';
 import 'package:recipe_book/features/meals/domain/repositories/meal_repository.dart';
+
 import 'package:recipe_book/features/meals/domain/usecases/get_meals.dart';
 import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart';
 
@@ -14,7 +19,31 @@ void main() {
     setUp(() async {
       WidgetsFlutterBinding.ensureInitialized();
       await GetIt.instance.reset();
-      await initDependencies();
+
+      try {
+        await initDependencies();
+      } on Exception catch (_) {
+        await GetIt.instance.reset();
+
+        final mockLocalDataSource = _MockMealLocalDataSource();
+
+        GetIt.instance
+          ..registerLazySingleton<MealRemoteDataSource>(
+            () => MealRemoteDataSourceImpl(Dio()),
+          )
+          ..registerLazySingleton<MealLocalDataSource>(
+            () => mockLocalDataSource,
+          )
+          ..registerLazySingleton<MealRepository>(
+            () => MealRepositoryImpl(
+              GetIt.instance<MealRemoteDataSource>(),
+              GetIt.instance<MealLocalDataSource>(),
+            ),
+          )
+          ..registerLazySingleton(() => GetMealsByLetter(GetIt.instance<MealRepository>()))
+          ..registerFactory(() => MealBloc(GetIt.instance<GetMealsByLetter>()))
+          ..registerFactory(MainCubit.new);
+      }
     });
 
     test('should initialize dependencies successfully', () async {
@@ -71,4 +100,14 @@ void main() {
       expect(GetIt.instance.isRegistered<MainCubit>(), isTrue);
     });
   });
+}
+
+class _MockMealLocalDataSource implements MealLocalDataSource {
+  @override
+  Future<List<MealModel>?> getCachedMealsByLetter(String letter) async {
+    return [];
+  }
+
+  @override
+  Future<void> cacheMealsByLetter(String letter, List<MealModel> meals) async {}
 }

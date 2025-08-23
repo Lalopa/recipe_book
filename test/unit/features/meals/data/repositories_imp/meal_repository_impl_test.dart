@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:recipe_book/features/meals/data/datasources/meal_local_datasource.dart';
 import 'package:recipe_book/features/meals/data/datasources/meal_remote_datasource.dart';
 import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 import 'package:recipe_book/features/meals/data/repositories_imp/meal_repository_impl.dart';
@@ -46,19 +47,45 @@ Meal buildTestMeal({
   );
 }
 
-@GenerateMocks([MealRemoteDataSource])
+@GenerateMocks([MealRemoteDataSource, MealLocalDataSource])
 void main() {
   group('MealRepositoryImpl', () {
     late MealRepositoryImpl repository;
     late MockMealRemoteDataSource mockRemoteDataSource;
+    late MockMealLocalDataSource mockLocalDataSource;
 
     setUp(() {
       mockRemoteDataSource = MockMealRemoteDataSource();
-      repository = MealRepositoryImpl(mockRemoteDataSource);
+      mockLocalDataSource = MockMealLocalDataSource();
+      repository = MealRepositoryImpl(mockRemoteDataSource, mockLocalDataSource);
     });
 
     group('getMealsByLetter', () {
-      test('should return meals when remote data source succeeds', () async {
+      test('should return cached meals when available', () async {
+        // arrange
+        const letter = 'a';
+        final cachedMealModels = [
+          buildTestMealModel(id: '1', name: 'Apple Pie'),
+          buildTestMealModel(id: '2', name: 'Avocado Salad'),
+        ];
+        final expectedMeals = [
+          buildTestMeal(id: '1', name: 'Apple Pie'),
+          buildTestMeal(id: '2', name: 'Avocado Salad'),
+        ];
+
+        when(mockLocalDataSource.getCachedMealsByLetter(letter)).thenAnswer((_) async => cachedMealModels);
+
+        // act
+        final result = await repository.getMealsByLetter(letter);
+
+        // assert
+        expect(result, expectedMeals);
+        verify(mockLocalDataSource.getCachedMealsByLetter(letter));
+        verifyNoMoreInteractions(mockRemoteDataSource);
+        verifyNoMoreInteractions(mockLocalDataSource);
+      });
+
+      test('should return meals from remote when no cache available', () async {
         // arrange
         const letter = 'a';
         final mealModels = [
@@ -70,20 +97,54 @@ void main() {
           buildTestMeal(id: '2', name: 'Avocado Salad'),
         ];
 
+        when(mockLocalDataSource.getCachedMealsByLetter(letter)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.fetchByLetter(letter)).thenAnswer((_) async => mealModels);
+        when(mockLocalDataSource.cacheMealsByLetter(letter, mealModels)).thenAnswer((_) async {});
 
         // act
         final result = await repository.getMealsByLetter(letter);
 
         // assert
         expect(result, expectedMeals);
+        verify(mockLocalDataSource.getCachedMealsByLetter(letter));
         verify(mockRemoteDataSource.fetchByLetter(letter));
+        verify(mockLocalDataSource.cacheMealsByLetter(letter, mealModels));
         verifyNoMoreInteractions(mockRemoteDataSource);
+        verifyNoMoreInteractions(mockLocalDataSource);
       });
 
-      test('should return empty list when remote data source returns empty', () async {
+      test('should return meals from remote when cache is empty', () async {
+        // arrange
+        const letter = 'a';
+        final mealModels = [
+          buildTestMealModel(id: '1', name: 'Apple Pie'),
+          buildTestMealModel(id: '2', name: 'Avocado Salad'),
+        ];
+        final expectedMeals = [
+          buildTestMeal(id: '1', name: 'Apple Pie'),
+          buildTestMeal(id: '2', name: 'Avocado Salad'),
+        ];
+
+        when(mockLocalDataSource.getCachedMealsByLetter(letter)).thenAnswer((_) async => []);
+        when(mockRemoteDataSource.fetchByLetter(letter)).thenAnswer((_) async => mealModels);
+        when(mockLocalDataSource.cacheMealsByLetter(letter, mealModels)).thenAnswer((_) async {});
+
+        // act
+        final result = await repository.getMealsByLetter(letter);
+
+        // assert
+        expect(result, expectedMeals);
+        verify(mockLocalDataSource.getCachedMealsByLetter(letter));
+        verify(mockRemoteDataSource.fetchByLetter(letter));
+        verify(mockLocalDataSource.cacheMealsByLetter(letter, mealModels));
+        verifyNoMoreInteractions(mockRemoteDataSource);
+        verifyNoMoreInteractions(mockLocalDataSource);
+      });
+
+      test('should return empty list when no cache and remote returns empty', () async {
         // arrange
         const letter = 'x';
+        when(mockLocalDataSource.getCachedMealsByLetter(letter)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.fetchByLetter(letter)).thenAnswer((_) async => []);
 
         // act
@@ -91,22 +152,45 @@ void main() {
 
         // assert
         expect(result, isEmpty);
+        verify(mockLocalDataSource.getCachedMealsByLetter(letter));
         verify(mockRemoteDataSource.fetchByLetter(letter));
         verifyNoMoreInteractions(mockRemoteDataSource);
+        verifyNoMoreInteractions(mockLocalDataSource);
       });
 
-      test('should propagate errors from remote data source', () async {
+      test('should propagate errors from remote data source when no cache', () async {
         // arrange
         const letter = 'a';
+        when(mockLocalDataSource.getCachedMealsByLetter(letter)).thenAnswer((_) async => null);
         when(mockRemoteDataSource.fetchByLetter(letter)).thenThrow(Exception('Network error'));
+
+        // act & assert
+        try {
+          await repository.getMealsByLetter(letter);
+          fail('Expected exception was not thrown');
+        } on Exception catch (e) {
+          expect(e, isA<Exception>());
+        }
+
+        verify(mockLocalDataSource.getCachedMealsByLetter(letter));
+        verify(mockRemoteDataSource.fetchByLetter(letter));
+        verifyNoMoreInteractions(mockRemoteDataSource);
+        verifyNoMoreInteractions(mockLocalDataSource);
+      });
+
+      test('should propagate errors from local data source', () async {
+        // arrange
+        const letter = 'a';
+        when(mockLocalDataSource.getCachedMealsByLetter(letter)).thenThrow(Exception('Cache error'));
 
         // act & assert
         expect(
           () => repository.getMealsByLetter(letter),
           throwsA(isA<Exception>()),
         );
-        verify(mockRemoteDataSource.fetchByLetter(letter));
+        verify(mockLocalDataSource.getCachedMealsByLetter(letter));
         verifyNoMoreInteractions(mockRemoteDataSource);
+        verifyNoMoreInteractions(mockLocalDataSource);
       });
     });
 
