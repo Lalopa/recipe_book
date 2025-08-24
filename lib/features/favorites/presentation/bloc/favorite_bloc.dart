@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/check_favorite_status.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/get_favorite_meals.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/toggle_favorite.dart';
@@ -8,6 +9,7 @@ import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 part 'favorite_event.dart';
 part 'favorite_state.dart';
 
+@injectable
 class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
   FavoriteBloc(
     this._getFavoriteMeals,

@@ -1,8 +1,10 @@
+import 'package:injectable/injectable.dart';
 import 'package:recipe_book/features/favorites/data/datasources/favorite_local_datasource.dart';
 import 'package:recipe_book/features/favorites/domain/repositories/favorite_repository.dart';
 import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 
+@Injectable(as: FavoriteRepository)
 class FavoriteRepositoryImpl implements FavoriteRepository {
   const FavoriteRepositoryImpl(this.localDataSource);
 

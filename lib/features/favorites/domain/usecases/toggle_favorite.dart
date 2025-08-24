@@ -1,5 +1,7 @@
+import 'package:injectable/injectable.dart';
 import 'package:recipe_book/features/favorites/domain/repositories/favorite_repository.dart';
 
+@injectable
 class ToggleFavorite {
   const ToggleFavorite(this.repository);
 
