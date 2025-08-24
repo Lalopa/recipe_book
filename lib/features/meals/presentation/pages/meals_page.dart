@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:recipe_book/core/cache/managers/objectbox_cache_manager.dart';
 import 'package:recipe_book/core/di/injector.dart';
 import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/main/presentation/cubit/main_cubit.dart';
@@ -144,6 +146,17 @@ class MealResultsWidget extends StatelessWidget {
               ),
             ),
           ),
+          if (kDebugMode)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: ElevatedButton(
+                onPressed: () {
+                  ObjectBoxCacheManager.instance.clearAllCache();
+                  context.read<MealBloc>().add(const MealRefreshed());
+                },
+                child: const Text('Limpiar Cache'),
+              ),
+            ),
           Expanded(
             child: meals.isEmpty
                 ? Center(

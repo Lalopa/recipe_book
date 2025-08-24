@@ -198,16 +198,12 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Debug: Check what widgets are actually being rendered
-
-      // Find and tap retry button (ElevatedButton.icon is a subclass of ElevatedButton)
-      final retryButton = find.byType(GestureDetector);
+      final retryButton = find.byType(ElevatedButton);
       expect(retryButton, findsOneWidget);
 
       await tester.tap(retryButton);
       await tester.pump();
 
-      // Verify that SearchQueryChanged event was added again
       verify(mockSearchBloc.add(const SearchQueryChanged('chicken'))).called(1);
     });
 
@@ -216,7 +212,6 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Type quickly
       await tester.enterText(find.byType(TextField), 'c');
       await tester.pump();
       await tester.enterText(find.byType(TextField), 'ch');
@@ -232,10 +227,8 @@ void main() {
       await tester.enterText(find.byType(TextField), 'chicken');
       await tester.pump();
 
-      // Wait for debounce timer
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Should only call add once with the final query
       verify(mockSearchBloc.add(const SearchQueryChanged('chicken'))).called(1);
     });
 
@@ -244,21 +237,16 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Enter some text first
       await tester.enterText(find.byType(TextField), 'chicken');
       await tester.pump();
 
-      // Wait for debounce timer
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Now clear the text
       await tester.enterText(find.byType(TextField), '');
       await tester.pump();
 
-      // Wait for debounce timer
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Should call add for both queries
       verify(mockSearchBloc.add(const SearchQueryChanged('chicken'))).called(1);
       verify(mockSearchBloc.add(const SearchQueryChanged(''))).called(1);
     });
@@ -268,14 +256,11 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Enter whitespace-only text
       await tester.enterText(find.byType(TextField), '   ');
       await tester.pump();
 
-      // Wait for debounce timer
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Should call add for whitespace-only query, but SearchBloc will filter it
       verify(mockSearchBloc.add(const SearchQueryChanged('   '))).called(1);
     });
 
@@ -284,14 +269,11 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Enter short text
       await tester.enterText(find.byType(TextField), 'a');
       await tester.pump();
 
-      // Wait for debounce timer
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Should call add for short query
       verify(mockSearchBloc.add(const SearchQueryChanged('a'))).called(1);
     });
 
@@ -300,14 +282,11 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Enter text with special characters
       await tester.enterText(find.byType(TextField), 'chicken & pasta');
       await tester.pump();
 
-      // Wait for debounce timer
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Should call add with special characters
       verify(mockSearchBloc.add(const SearchQueryChanged('chicken & pasta'))).called(1);
     });
 
@@ -316,14 +295,11 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Enter text with numbers
       await tester.enterText(find.byType(TextField), 'chicken123');
       await tester.pump();
 
-      // Wait for debounce timer
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Should call add with numbers
       verify(mockSearchBloc.add(const SearchQueryChanged('chicken123'))).called(1);
     });
 
@@ -332,15 +308,12 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Enter very long text
       final longQuery = 'a' * 1000;
       await tester.enterText(find.byType(TextField), longQuery);
       await tester.pump();
 
-      // Wait for debounce timer
       await tester.pump(const Duration(milliseconds: 600));
 
-      // Should call add with long query
       verify(mockSearchBloc.add(SearchQueryChanged(longQuery))).called(1);
     });
 
@@ -349,17 +322,14 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Enter text
       await tester.enterText(find.byType(TextField), 'chicken');
       await tester.pump();
 
-      // Change state to loading
       when(mockSearchBloc.state).thenReturn(
         const SearchState(status: SearchStatus.loading, query: 'chicken'),
       );
       await tester.pump();
 
-      // Text should still be in the field
       expect(find.text('chicken'), findsOneWidget);
     });
 
@@ -368,14 +338,11 @@ void main() {
 
       await tester.pumpWidget(createTestWidget());
 
-      // Enter some text
       await tester.enterText(find.byType(TextField), 'chicken');
       await tester.pump();
 
-      // Dispose the widget
       await tester.pumpWidget(Container());
 
-      // Verify that the bloc was not closed (it's managed externally)
       verifyNever(mockSearchBloc.close());
     });
 
@@ -391,20 +358,15 @@ void main() {
         ),
       );
 
-      // Debug: Check what's being rendered
-
-      // Let's see what text is actually being rendered
       final textWidgets = find.byType(Text).evaluate();
       for (var i = 0; i < textWidgets.length; i++) {
         tester.widget<Text>(find.byType(Text).at(i));
       }
 
-      // Let's see what other widgets are being rendered
-
       expect(find.byType(SearchErrorWidget), findsOneWidget);
       expect(find.text('Search Error'), findsOneWidget);
       expect(find.text('Test error message'), findsOneWidget);
-      expect(find.byType(GestureDetector), findsOneWidget);
+      expect(find.byType(ElevatedButton), findsOneWidget);
     });
   });
 }

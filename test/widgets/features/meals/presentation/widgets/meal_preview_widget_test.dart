@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
+import 'package:recipe_book/features/favorites/presentation/widgets/favorite_button_widget.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/meal_image_widget.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/meal_preview_widget.dart';
@@ -206,7 +207,7 @@ void main() {
 
       expect(positionedWidget.top, 8);
       expect(positionedWidget.right, 8);
-      expect(positionedWidget.child, isA<BlocBuilder<FavoriteBloc, FavoriteState>>());
+      expect(positionedWidget.child, isA<FavoriteButtonWidget>());
     });
 
     testWidgets('should have correct favorite icon size', (tester) async {

@@ -89,72 +89,78 @@ class _SearchViewState extends State<SearchView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBarWidget(),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ValueListenableBuilder<TextEditingValue>(
-              valueListenable: _searchController,
-              builder: (context, value, child) {
-                return TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Ex: chicken, pasta, salad',
-                    prefixIcon: const Icon(FontAwesomeIcons.magnifyingGlass),
-                    suffixIcon: value.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: _onClearSearch,
-                          )
-                        : null,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
-                        width: 2,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: const CustomAppBarWidget(),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _searchController,
+                builder: (context, value, child) {
+                  return TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Ex: chicken, pasta, salad',
+                      prefixIcon: const Icon(FontAwesomeIcons.magnifyingGlass),
+                      suffixIcon: value.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: _onClearSearch,
+                            )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor,
+                          width: 2,
+                        ),
                       ),
                     ),
-                  ),
-                  autofocus: true,
-                  onChanged: _onSearchChanged,
-                );
-              },
+                    autofocus: true,
+                    onChanged: _onSearchChanged,
+                    autocorrect: false,
+                  );
+                },
+              ),
             ),
-          ),
-          Expanded(
-            child: BlocBuilder<SearchBloc, SearchState>(
-              builder: (context, state) {
-                switch (state.status) {
-                  case SearchStatus.initial:
-                    return const SearchInitialWidget();
-                  case SearchStatus.loading:
-                    return const SearchLoadingWidget();
-                  case SearchStatus.success:
-                    return SearchResultsWidget(
-                      meals: state.meals,
-                      query: state.query,
-                    );
-                  case SearchStatus.failure:
-                    return SearchErrorWidget(
-                      errorMessage: state.errorMessage ?? 'Unknown error',
-                      onRetry: () {
-                        if (state.query.isNotEmpty) {
-                          context.read<SearchBloc>().add(
-                            SearchQueryChanged(state.query),
-                          );
-                        }
-                      },
-                    );
-                }
-              },
+            Expanded(
+              child: BlocBuilder<SearchBloc, SearchState>(
+                builder: (context, state) {
+                  switch (state.status) {
+                    case SearchStatus.initial:
+                      return const SearchInitialWidget();
+                    case SearchStatus.loading:
+                      return const SearchLoadingWidget();
+                    case SearchStatus.success:
+                      return SearchResultsWidget(
+                        meals: state.meals,
+                        query: state.query,
+                      );
+                    case SearchStatus.failure:
+                      return SearchErrorWidget(
+                        errorMessage: state.errorMessage ?? 'Unknown error',
+                        onRetry: () {
+                          if (state.query.isNotEmpty) {
+                            context.read<SearchBloc>().add(
+                              SearchQueryChanged(state.query),
+                            );
+                          }
+                        },
+                      );
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

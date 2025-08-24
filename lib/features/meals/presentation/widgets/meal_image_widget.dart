@@ -7,6 +7,7 @@ class MealImageWidget extends StatelessWidget {
     this.width = 56,
     this.height = 56,
     this.borderRadius = 8.0,
+    this.bottomBorderRadius,
     super.key,
   });
 
@@ -14,6 +15,7 @@ class MealImageWidget extends StatelessWidget {
   final double width;
   final double height;
   final double borderRadius;
+  final double? bottomBorderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class MealImageWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(borderRadius),
+        bottom: Radius.circular(bottomBorderRadius ?? 0),
       ),
       child: CachedNetworkImage(
         imageUrl: imageUrl!,
