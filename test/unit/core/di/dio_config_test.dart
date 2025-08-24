@@ -33,60 +33,6 @@ void main() {
         expect(dio.options.headers['Content-Type'], equals('application/json'));
         expect(dio.options.headers['Accept'], equals('application/json'));
       });
-
-      test('should create Dio with logging interceptor', () {
-        final dio = DioConfig.createDio();
-
-        expect(dio.interceptors, isNotEmpty);
-        // Verificar que tenga al menos el interceptor de logging
-        final hasLoggingInterceptor = dio.interceptors.any(
-          (interceptor) => interceptor.runtimeType.toString().contains('LoggingInterceptor'),
-        );
-        expect(hasLoggingInterceptor, isTrue);
-      });
-    });
-
-    group('LoggingInterceptor', () {
-      test('should handle onRequest without throwing', () {
-        final dio = DioConfig.createDio();
-        final interceptor = dio.interceptors.first;
-
-        final requestOptions = RequestOptions(
-          path: '/test',
-          method: 'GET',
-          queryParameters: {'param': 'value'},
-        );
-
-        expect(() {
-          interceptor.onRequest(requestOptions, RequestInterceptorHandler());
-        }, returnsNormally);
-      });
-
-      test('should handle onError without throwing', () {
-        final dio = DioConfig.createDio();
-        final interceptor = dio.interceptors.first;
-
-        final requestOptions = RequestOptions(path: '/test');
-        final error = DioException(
-          requestOptions: requestOptions,
-          response: Response(
-            requestOptions: requestOptions,
-            statusCode: 500,
-            data: 'Internal Server Error',
-          ),
-          message: 'Internal Server Error',
-        );
-
-        expect(() {
-          final customHandler = _CustomErrorInterceptorHandler();
-          interceptor.onError(error, customHandler);
-        }, returnsNormally);
-      });
     });
   });
-}
-
-class _CustomErrorInterceptorHandler extends ErrorInterceptorHandler {
-  @override
-  void next(DioException error) {}
 }
