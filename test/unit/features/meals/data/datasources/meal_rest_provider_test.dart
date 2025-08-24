@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:recipe_book/core/error/failures.dart';
 import 'package:recipe_book/core/utils/api_constants.dart';
 import 'package:recipe_book/features/meals/data/datasources/meal_rest_provider.dart';
 import 'package:recipe_book/features/meals/data/models/meal_model.dart';
@@ -184,7 +185,7 @@ void main() {
         // act & assert
         expect(
           () => dataSource.fetchByLetter(letter),
-          throwsA(isA<DioException>()),
+          throwsA(isA<NetworkFailure>()),
         );
 
         verify(
@@ -343,7 +344,7 @@ void main() {
         // act & assert
         expect(
           () => dataSource.searchMeals(query),
-          throwsA(isA<DioException>()),
+          throwsA(isA<NetworkFailure>()),
         );
 
         verify(

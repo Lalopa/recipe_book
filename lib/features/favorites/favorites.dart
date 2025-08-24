@@ -1,0 +1,10 @@
+export 'data/datasources/favorite_local_datasource.dart';
+export 'data/repositories_impl/favorite_repository_impl.dart';
+export 'domain/repositories/favorite_repository.dart';
+export 'domain/usecases/check_favorite_status.dart';
+export 'domain/usecases/get_favorite_meals.dart';
+export 'domain/usecases/toggle_favorite.dart';
+export 'presentation/bloc/favorite_bloc.dart';
+export 'presentation/pages/favorites_page.dart';
+export 'presentation/widgets/favorite_button_widget.dart';
+export 'presentation/widgets/favorite_meal_widget.dart';

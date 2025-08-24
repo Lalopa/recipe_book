@@ -20,6 +20,7 @@ Este proyecto sigue una **arquitectura limpia (Clean Architecture)** con **Domai
 - **Dependency Injection** con GetIt e Injectable
 - **Freezed** para modelos inmutables y generación de código
 - **ObjectBox** para persistencia local de datos
+- **Failure Pattern** para manejo de errores optimizado y tipado
 
 ### Tecnologías y Librerías
 - **Estado**: Flutter BLoC para gestión de estado
@@ -27,6 +28,7 @@ Este proyecto sigue una **arquitectura limpia (Clean Architecture)** con **Domai
 - **Base de Datos Local**: ObjectBox para cache y favoritos
 - **Inyección de Dependencias**: GetIt + Injectable
 - **Generación de Código**: Freezed, JSON Serializable, Build Runner
+- **Manejo de Errores**: Sistema de Failure classes con mapeo automático
 
 ## 🚀 Instalación y Configuración Local
 
@@ -107,6 +109,35 @@ La aplicación utiliza la API de [TheMealDB](https://www.themealdb.com/) para ob
 - **Cache Inteligente**: Almacenamiento local de recetas para acceso offline
 - **Navegación Intuitiva**: Bottom navigation con páginas principales
 
+## 🚨 Sistema de Manejo de Errores
+
+### Características del Sistema
+- **Failure Classes Tipadas**: Cada tipo de error tiene su propia clase (NetworkFailure, ServerFailure, etc.)
+- **Mapeo Automático**: Conversión automática de excepciones a Failure classes específicas
+- **Integración con Dio**: Manejo automático de errores HTTP y de red
+- **Mensajes Consistentes**: Sistema centralizado de mensajes de error en inglés
+- **Linter Compliant**: Las Failure classes implementan Exception para cumplir con las reglas del linter
+
+### Tipos de Error Soportados
+- **Errores de Red**: NetworkFailure, TimeoutFailure
+- **Errores del Servidor**: ServerFailure, NotFoundFailure, UnauthorizedFailure
+- **Errores Locales**: LocalDatabaseFailure, CacheFailure, FileFailure
+- **Errores de Datos**: ParsingFailure, ValidationFailure, InvalidDataFailure
+- **Errores Específicos**: SearchFailure, FavoriteFailure, AuthenticationFailure
+
+### Uso en el Código
+```dart
+try {
+  await repository.getData();
+} on NetworkFailure catch (failure) {
+  // Manejar error de red específicamente
+} on ServerFailure catch (failure) {
+  // Manejar error del servidor
+} on Failure catch (failure) {
+  // Manejar cualquier otro tipo de fallo
+}
+```
+
 ## 🧪 Testing
 
 El proyecto incluye una suite completa de tests:
@@ -130,6 +161,7 @@ genhtml coverage/lcov.info -o coverage/html
 - **Inyección de Dependencias**: Uso de GetIt para facilitar testing y mantenimiento
 - **Persistencia Local**: ObjectBox para mejor rendimiento en dispositivos móviles
 - **Estado Reactivo**: BLoC pattern para gestión predecible del estado
+- **Manejo de Errores**: Sistema de Failure classes que implementa Exception para consistencia con el linter
 
 ### Limitaciones Actuales
 - **API Externa**: Dependencia de TheMealDB para datos de recetas
@@ -141,12 +173,13 @@ genhtml coverage/lcov.info -o coverage/html
 - [ ] **Modo Oscuro**: Soporte completo para temas oscuros
 - [ ] **Internacionalización**: Soporte multi-idioma
 - [ ] **Persistencia de lista de ingredientes:** Guardar en objectBox
+- [x] **Sistema de Manejo de Errores**: Failure classes optimizadas implementadas
 
 ## 📊 Métricas del Proyecto
 
-- **Versión Actual**: 0.6.1+20
+- **Versión Actual**: 0.6.2+21
 - **Dependencias**: 20+ paquetes principales
-- **Arquitectura**: Clean Architecture + BLoC Pattern
+- **Arquitectura**: Clean Architecture + BLoC Pattern + Failure Pattern
 
 ## 🤝 Contribución
 
