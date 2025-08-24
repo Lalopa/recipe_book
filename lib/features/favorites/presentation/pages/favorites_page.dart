@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
-import 'package:recipe_book/features/favorites/presentation/widgets/favorite_meal_widget.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/custom_app_bar_widget.dart';
+import 'package:recipe_book/features/meals/presentation/widgets/meal_preview_widget.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -81,7 +81,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
               itemCount: state.favoriteMeals.length,
               itemBuilder: (context, index) {
                 final meal = state.favoriteMeals[index];
-                return FavoriteMealWidget(meal: meal);
+                return MealPreviewWidget(meal: meal);
               },
             ),
           );
