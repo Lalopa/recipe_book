@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recipe_book/core/di/injector.dart';
+import 'package:recipe_book/core/di/injection.dart';
 import 'package:recipe_book/core/utils/constants.dart';
 import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/main/presentation/pages/main_page.dart';
