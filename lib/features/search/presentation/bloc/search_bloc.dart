@@ -1,11 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/domain/usecases/search_meals.dart';
 
 part 'search_event.dart';
 part 'search_state.dart';
 
+@injectable
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc(this._searchMeals) : super(const SearchState.initial()) {
     on<SearchQueryChanged>(_onSearchQueryChanged);

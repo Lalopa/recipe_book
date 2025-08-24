@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:recipe_book/core/di/injector.dart';
+import 'package:recipe_book/core/di/injection.dart';
 import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/custom_app_bar_widget.dart';
 import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart';
