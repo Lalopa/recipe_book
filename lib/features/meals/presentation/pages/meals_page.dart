@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:recipe_book/core/cache/managers/objectbox_cache_manager.dart';
-import 'package:recipe_book/core/di/injector.dart';
+import 'package:recipe_book/core/di/injection.dart';
 import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/main/presentation/cubit/main_cubit.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
@@ -112,8 +112,7 @@ class MealResultsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async =>
-          context.read<MealBloc>().add(const MealRefreshed()),
+      onRefresh: () async => context.read<MealBloc>().add(const MealRefreshed()),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -155,7 +154,7 @@ class MealResultsWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
                 onPressed: () {
-                  ObjectBoxCacheManager.instance.clearAllCache();
+                  ObjectBoxCacheManager().clearAllCache();
                   context.read<MealBloc>().add(const MealRefreshed());
                 },
                 child: const Text('Limpiar Cache'),
@@ -169,19 +168,17 @@ class MealResultsWidget extends StatelessWidget {
                       children: [
                         Text(
                           'No results found',
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.grey[600],
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'We are working on it',
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: Colors.grey[500],
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.grey[500],
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -190,13 +187,12 @@ class MealResultsWidget extends StatelessWidget {
                 : GridView.builder(
                     controller: _controller,
                     itemCount: meals.length + (hasReachedMax ? 0 : 1),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: 0.65,
-                        ),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      childAspectRatio: 0.65,
+                    ),
                     padding: const EdgeInsets.all(8),
                     itemBuilder: (context, index) {
                       if (index >= meals.length) {

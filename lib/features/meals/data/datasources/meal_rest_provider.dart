@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:recipe_book/core/utils/api_constants.dart';
 import 'package:recipe_book/features/meals/data/datasources/meal_remote_datasource.dart';
 import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 
+@Injectable(as: MealRemoteDataSource)
 class MealRemoteDataSourceImpl implements MealRemoteDataSource {
   MealRemoteDataSourceImpl(this.dio);
 

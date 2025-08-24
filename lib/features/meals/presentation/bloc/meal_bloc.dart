@@ -1,11 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/domain/usecases/get_meals.dart';
 
 part 'meal_event.dart';
 part 'meal_state.dart';
+part 'meal_bloc.freezed.dart';
 
+@injectable
 class MealBloc extends Bloc<MealEvent, MealState> {
   MealBloc(
     this._getMealsByLetter,

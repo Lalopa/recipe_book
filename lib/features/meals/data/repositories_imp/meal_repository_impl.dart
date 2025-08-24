@@ -1,9 +1,11 @@
+import 'package:injectable/injectable.dart';
 import 'package:recipe_book/features/meals/data/datasources/meal_local_datasource.dart';
 import 'package:recipe_book/features/meals/data/datasources/meal_remote_datasource.dart';
 import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/domain/repositories/meal_repository.dart';
 
+@Injectable(as: MealRepository)
 class MealRepositoryImpl implements MealRepository {
   MealRepositoryImpl(this.remoteDataSource, this.localDataSource);
 

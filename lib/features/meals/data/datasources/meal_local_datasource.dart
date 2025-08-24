@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:recipe_book/core/cache/managers/objectbox_cache_manager.dart';
 import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 
@@ -11,6 +12,7 @@ abstract class MealLocalDataSource {
   Future<void> cacheSearchResults(String query, List<MealModel> meals);
 }
 
+@Injectable(as: MealLocalDataSource)
 class MealLocalDataSourceImpl implements MealLocalDataSource {
   MealLocalDataSourceImpl(this._cache);
   final ObjectBoxCacheManager _cache;
