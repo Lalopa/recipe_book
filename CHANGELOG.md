@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.6.1+20 (2025-01-27)
+
+### Added
+- feat(di): add MealBloc to dependency injection configuration
+  - Register MealBloc factory in GetIt configuration
+  - Ensure proper dependency injection for meal-related functionality
+  - Maintain dependency injection pattern consistency
+
+### Changed
+- refactor(favorites): replace FavoriteMealWidget with MealPreviewWidget in favorites page
+  - Use MealPreviewWidget for consistent meal display across the app
+  - Remove unused FavoriteMealWidget import
+  - Ensure consistent UI and functionality between meals and favorites pages
+- perf(cache): optimize ObjectBoxCacheManager code formatting and structure
+  - Improve code readability with better line breaks and formatting
+  - Maintain consistent code style across cache management functions
+- perf(meals): optimize meals page code formatting and structure
+  - Improve code readability with better line breaks and formatting
+  - Maintain consistent code style across meal display functions
+- perf(detail): optimize meal detail page code formatting and structure
+  - Improve code readability with better line breaks and formatting
+  - Maintain consistent code style across detail page functions
+
+### Removed
+- chore: remove unused build.yaml file
+  - Clean up project configuration files
+  - Remove unnecessary build configuration
+
 ## 0.6.0+19 (2025-01-27)
 
 ### Added
