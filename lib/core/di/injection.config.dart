@@ -45,6 +45,8 @@ import 'package:recipe_book/features/meals/domain/usecases/get_meals.dart'
     as _i211;
 import 'package:recipe_book/features/meals/domain/usecases/search_meals.dart'
     as _i81;
+import 'package:recipe_book/features/meals/presentation/bloc/meal_bloc.dart'
+    as _i964;
 import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart'
     as _i210;
 
@@ -91,6 +93,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i81.SearchMeals>(
       () => _i81.SearchMeals(gh<_i902.MealRepository>()),
+    );
+    gh.factory<_i964.MealBloc>(
+      () => _i964.MealBloc(gh<_i211.GetMealsByLetter>()),
     );
     gh.factory<_i588.FavoriteBloc>(
       () => _i588.FavoriteBloc(
