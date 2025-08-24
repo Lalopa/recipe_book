@@ -1,30 +1,13 @@
 targets:
   $default:
     builders:
-      objectbox_generator|objectbox:
-        enabled: true
+      injectable_generator:injectable_builder:
         options:
-      mockito|mockBuilder:
-        generate_for:
-          - test/unit/features/meals/domain/usecases/get_meals_test.dart
-          - test/unit/features/meals/domain/usecases/search_meals_test.dart
-          - test/unit/features/meals/data/repositories_imp/meal_repository_impl_test.dart
-          - test/unit/features/meals/data/datasources/meal_rest_provider_test.dart
-          - test/unit/features/meals/data/datasources/meal_local_datasource_test.dart
-          - test/unit/core/cache/managers/objectbox_cache_manager_test.dart
-          - test/unit/core/di/objectbox_config_test.dart
-          - test/unit/features/meals/presentation/bloc/meal_bloc_test.dart
-          - test/unit/features/search/presentation/bloc/search_bloc_test.dart
-          - test/widgets/features/search/presentation/pages/search_page_test.dart
-          - test/unit/features/main/presentation/pages/main_page_test.dart
-          - test/widgets/features/meals/presentation/widgets/meal_preview_widget_test.dart
-          - test/widgets/features/search/presentation/widgets/search_results_widget_test.dart
-          - test/unit/main_test.dart
-          - test/unit/features/favorites/domain/usecases/toggle_favorite_test.dart
-          - test/unit/features/favorites/domain/usecases/check_favorite_status_test.dart
-          - test/unit/features/favorites/domain/usecases/get_favorite_meals_test.dart
-          - test/unit/features/favorites/presentation/bloc/favorite_bloc_test.dart
-          - test/unit/features/favorites/data/datasources/favorite_local_datasource_test.dart
-          - test/unit/features/favorites/data/repositories_impl/favorite_repository_impl_test.dart
-          - test/widgets/features/favorites/presentation/widgets/favorite_button_widget_test.dart
-          - test/widgets/features/favorites/presentation/widgets/favorite_meal_widget_test.dart
+          auto_register: true
+          class_name_pattern: ".*RepositoryImpl|.*DataSourceImpl|.*Bloc|.*Cubit|.*UseCase|.*UseCaseImpl|.*Service|.*ServiceImpl"
+          file_name_pattern: "_impl|_bloc|_cubit|_usecase|_service"
+        enabled: true
+      injectable_generator:injectable_config_builder:
+        options:
+          auto_register: true
+        enabled: true
