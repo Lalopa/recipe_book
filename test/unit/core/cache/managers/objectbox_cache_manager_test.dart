@@ -6,7 +6,7 @@ void main() {
     late ObjectBoxCacheManager cacheManager;
 
     setUp(() {
-      cacheManager = ObjectBoxCacheManager.instance;
+      cacheManager = ObjectBoxCacheManager();
     });
 
     test('should trim whitespace and convert to lowercase', () {

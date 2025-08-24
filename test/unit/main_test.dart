@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
-import 'package:recipe_book/core/di/injector.dart';
+import 'package:recipe_book/core/di/injection.dart';
 import 'package:recipe_book/features/main/presentation/cubit/main_cubit.dart';
 import 'package:recipe_book/features/meals/domain/usecases/get_meals.dart';
 import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart';
@@ -24,7 +24,7 @@ void main() {
       // Test unitario para la inicialización de dependencias (parte de main)
       TestWidgetsFlutterBinding.ensureInitialized();
       await GetIt.instance.reset();
-      await initDependencies();
+      await configureDependencies();
 
       // Verificar que las dependencias están registradas
       expect(GetIt.instance.isRegistered<GetMealsByLetter>(), isTrue);
