@@ -6,6 +6,7 @@
 import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i7;
 import 'package:recipe_book/core/cache/managers/objectbox_cache_manager.dart'
     as _i2;
 import 'package:recipe_book/features/favorites/data/models/favorite_meal_model.dart'
@@ -120,4 +121,15 @@ class MockObjectBoxCacheManager extends _i1.Mock
             returnValue: _i4.Future<List<dynamic>?>.value(),
           )
           as _i4.Future<List<dynamic>?>);
+
+  @override
+  String normalizeQuery(String? query) =>
+      (super.noSuchMethod(
+            Invocation.method(#normalizeQuery, [query]),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.method(#normalizeQuery, [query]),
+            ),
+          )
+          as String);
 }
