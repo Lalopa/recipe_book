@@ -6,8 +6,6 @@
 import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:recipe_book/features/favorites/domain/entities/favorite_meal.dart'
-    as _i5;
 import 'package:recipe_book/features/favorites/domain/repositories/favorite_repository.dart'
     as _i2;
 import 'package:recipe_book/features/favorites/domain/usecases/check_favorite_status.dart'
@@ -16,6 +14,7 @@ import 'package:recipe_book/features/favorites/domain/usecases/get_favorite_meal
     as _i3;
 import 'package:recipe_book/features/favorites/domain/usecases/toggle_favorite.dart'
     as _i6;
+import 'package:recipe_book/features/meals/domain/entities/meal.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -57,14 +56,12 @@ class MockGetFavoriteMeals extends _i1.Mock implements _i3.GetFavoriteMeals {
           as _i2.FavoriteRepository);
 
   @override
-  _i4.Future<List<_i5.FavoriteMeal>> call() =>
+  _i4.Future<List<_i5.Meal>> call() =>
       (super.noSuchMethod(
             Invocation.method(#call, []),
-            returnValue: _i4.Future<List<_i5.FavoriteMeal>>.value(
-              <_i5.FavoriteMeal>[],
-            ),
+            returnValue: _i4.Future<List<_i5.Meal>>.value(<_i5.Meal>[]),
           )
-          as _i4.Future<List<_i5.FavoriteMeal>>);
+          as _i4.Future<List<_i5.Meal>>);
 }
 
 /// A class which mocks [ToggleFavorite].

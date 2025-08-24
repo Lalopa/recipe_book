@@ -1,10 +1,10 @@
 import 'package:recipe_book/core/cache/managers/objectbox_cache_manager.dart';
-import 'package:recipe_book/features/favorites/data/models/favorite_meal_model.dart';
+import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 
 abstract class FavoriteLocalDataSource {
   Future<void> toggleFavorite(String mealId);
   Future<bool> isFavorite(String mealId);
-  Future<List<FavoriteMealModel>> getFavoriteMeals();
+  Future<List<MealModel>> getFavoriteMeals();
 }
 
 class FavoriteLocalDataSourceImpl implements FavoriteLocalDataSource {
@@ -22,7 +22,7 @@ class FavoriteLocalDataSourceImpl implements FavoriteLocalDataSource {
   }
 
   @override
-  Future<List<FavoriteMealModel>> getFavoriteMeals() async {
+  Future<List<MealModel>> getFavoriteMeals() async {
     return _cache.getFavoriteMeals();
   }
 }

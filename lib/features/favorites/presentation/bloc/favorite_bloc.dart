@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:recipe_book/features/favorites/domain/entities/favorite_meal.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/check_favorite_status.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/get_favorite_meals.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/toggle_favorite.dart';
+import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 
 part 'favorite_event.dart';
 part 'favorite_state.dart';
@@ -33,15 +33,28 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       emit(state.copyWith(status: FavoriteStatus.loading, isLoading: true));
       final favoriteMeals = await _getFavoriteMeals();
 
+      // Crear un nuevo mapa de estados de favoritos
+      final newFavoriteStatuses = <String, bool>{};
+
+      // Marcar todas las comidas favoritas como true
+      for (final meal in favoriteMeals) {
+        newFavoriteStatuses[meal.id] = true;
+      }
+
+      // Mantener el estado de las comidas que no están en la lista de favoritos
+      // pero que ya tenían un estado previo
+      for (final entry in state.favoriteStatuses.entries) {
+        if (!newFavoriteStatuses.containsKey(entry.key)) {
+          newFavoriteStatuses[entry.key] = false;
+        }
+      }
+
       emit(
         state.copyWith(
           status: FavoriteStatus.success,
           favoriteMeals: favoriteMeals,
           isLoading: false,
-          favoriteStatuses: {
-            ...state.favoriteStatuses,
-            for (final meal in favoriteMeals) meal.id: true,
-          },
+          favoriteStatuses: newFavoriteStatuses,
         ),
       );
     } on Exception catch (_) {

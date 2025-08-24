@@ -17,13 +17,13 @@ class FavoriteState extends Equatable {
       favoriteStatuses = const {};
 
   final FavoriteStatus status;
-  final List<FavoriteMeal> favoriteMeals;
+  final List<Meal> favoriteMeals;
   final bool isLoading;
   final Map<String, bool> favoriteStatuses;
 
   FavoriteState copyWith({
     FavoriteStatus? status,
-    List<FavoriteMeal>? favoriteMeals,
+    List<Meal>? favoriteMeals,
     bool? isLoading,
     Map<String, bool>? favoriteStatuses,
   }) {

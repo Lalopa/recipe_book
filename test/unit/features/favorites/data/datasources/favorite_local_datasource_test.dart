@@ -3,7 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:recipe_book/core/cache/managers/objectbox_cache_manager.dart';
 import 'package:recipe_book/features/favorites/data/datasources/favorite_local_datasource.dart';
-import 'package:recipe_book/features/favorites/data/models/favorite_meal_model.dart';
+import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 
 import 'favorite_local_datasource_test.mocks.dart';
 
@@ -73,36 +73,34 @@ void main() {
     group('getFavoriteMeals', () {
       test('should return list of favorite meals from cache manager', () async {
         // arrange
-        final testFavoriteMeals = [
-          const FavoriteMealModel(
+        final testMeals = [
+          const MealModel(
             id: 'meal1',
             name: 'Test Meal 1',
             thumbnail: 'thumbnail1.jpg',
             category: 'Test Category',
             instructions: 'Test Instructions 1',
             ingredients: {'ingredient1': 'amount1'},
-            addedAt: null,
           ),
-          const FavoriteMealModel(
+          const MealModel(
             id: 'meal2',
             name: 'Test Meal 2',
             thumbnail: 'thumbnail2.jpg',
             category: 'Test Category',
             instructions: 'Test Instructions 2',
             ingredients: {'ingredient2': 'amount2'},
-            addedAt: null,
           ),
         ];
 
         when(
           mockCacheManager.getFavoriteMeals(),
-        ).thenAnswer((_) async => testFavoriteMeals);
+        ).thenAnswer((_) async => testMeals);
 
         // act
         final result = await dataSource.getFavoriteMeals();
 
         // assert
-        expect(result, equals(testFavoriteMeals));
+        expect(result, equals(testMeals));
         verify(mockCacheManager.getFavoriteMeals()).called(1);
       });
 
@@ -110,7 +108,7 @@ void main() {
         // arrange
         when(
           mockCacheManager.getFavoriteMeals(),
-        ).thenAnswer((_) async => <FavoriteMealModel>[]);
+        ).thenAnswer((_) async => <MealModel>[]);
 
         // act
         final result = await dataSource.getFavoriteMeals();

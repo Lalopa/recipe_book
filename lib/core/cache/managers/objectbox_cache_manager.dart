@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:recipe_book/core/models/objectbox/meal_objectbox_model.dart';
 import 'package:recipe_book/core/models/objectbox/search_cache_objectbox_model.dart';
-import 'package:recipe_book/features/favorites/data/models/favorite_meal_model.dart';
 import 'package:recipe_book/features/meals/data/models/meal_model.dart';
 import 'package:recipe_book/objectbox.g.dart';
 
@@ -75,21 +74,17 @@ class ObjectBoxCacheManager {
       }
 
       final mealsJson = jsonDecode(searchEntry.dataJson) as List;
-      final meals = mealsJson.map((json) => MealModel.fromJson(json as Map<String, dynamic>)).toList();
+      final mealIds = mealsJson.map((json) => (json as Map<String, dynamic>)['idMeal'] as String).toList();
 
-      // Actualizar el estado de favoritos desde la base de datos local
-      final updatedMeals = <MealModel>[];
-      for (final meal in meals) {
-        final cachedMeal = await getCachedMeal(meal.id);
+      final meals = <MealModel>[];
+      for (final mealId in mealIds) {
+        final cachedMeal = await getCachedMeal(mealId);
         if (cachedMeal != null) {
-          // No podemos modificar MealModel directamente, así que retornamos el original
-          updatedMeals.add(meal);
-        } else {
-          updatedMeals.add(meal);
+          meals.add(cachedMeal);
         }
       }
 
-      return updatedMeals;
+      return meals;
     } on Exception catch (e) {
       if (kDebugMode) {
         print('Error getting cached meals: $e');
@@ -150,13 +145,13 @@ class ObjectBoxCacheManager {
     }
   }
 
-  Future<List<FavoriteMealModel>> getFavoriteMeals() async {
+  Future<List<MealModel>> getFavoriteMeals() async {
     try {
       final favoriteMeals = _mealBox.query(MealObjectBoxModel_.isFavorite.equals(true)).build().find();
 
       return favoriteMeals.map((meal) {
         final mealModel = meal.toMealModel();
-        return FavoriteMealModel.fromMealModel(mealModel);
+        return MealModel.fromJson(mealModel.toJson());
       }).toList();
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -175,6 +170,64 @@ class ObjectBoxCacheManager {
         print('Error checking favorite status: $e');
       }
       return false;
+    }
+  }
+
+  // Métodos para limpiar el cache
+  Future<void> clearAllCache() async {
+    try {
+      _mealBox.removeAll();
+      _searchCacheBox.removeAll();
+      if (kDebugMode) {
+        print('Cache limpiado completamente');
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print('Error limpiando cache: $e');
+      }
+    }
+  }
+
+  Future<void> clearExpiredCache() async {
+    try {
+      final now = DateTime.now();
+
+      // Limpiar comidas expiradas
+      final allMeals = _mealBox.getAll();
+      for (final meal in allMeals) {
+        if (meal.expiresAt != null && meal.expiresAt!.isBefore(now)) {
+          _mealBox.remove(meal.id);
+        }
+      }
+
+      // Limpiar búsquedas expiradas
+      final allSearches = _searchCacheBox.getAll();
+      for (final search in allSearches) {
+        if (search.expiresAt.isBefore(now)) {
+          _searchCacheBox.remove(search.id);
+        }
+      }
+
+      if (kDebugMode) {
+        print('Cache expirado limpiado');
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print('Error limpiando cache expirado: $e');
+      }
+    }
+  }
+
+  Future<void> clearSearchCache() async {
+    try {
+      _searchCacheBox.removeAll();
+      if (kDebugMode) {
+        print('Cache de búsquedas limpiado');
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print('Error limpiando cache de búsquedas: $e');
+      }
     }
   }
 

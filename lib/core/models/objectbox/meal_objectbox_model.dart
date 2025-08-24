@@ -74,6 +74,7 @@ class MealObjectBoxModel {
   }
 
   static String mapToJson(Map<String, String> ingredients) {
+    if (ingredients.isEmpty) return '{}';
     final entries = ingredients.entries.map((e) => '"${e.key}":"${e.value}"').join(',');
     return '{$entries}';
   }
@@ -82,6 +83,11 @@ class MealObjectBoxModel {
     try {
       final map = <String, String>{};
       if (json.isEmpty || json == '{}') return map;
+
+      // Verificar que el JSON tenga el formato correcto
+      if (!json.startsWith('{') || !json.endsWith('}')) {
+        return map;
+      }
 
       final content = json.substring(1, json.length - 1);
       if (content.isEmpty) return map;
@@ -92,7 +98,9 @@ class MealObjectBoxModel {
         if (colonIndex > 0) {
           final key = pair.substring(0, colonIndex).trim().replaceAll('"', '');
           final value = pair.substring(colonIndex + 1).trim().replaceAll('"', '');
-          map[key] = value;
+          if (key.isNotEmpty) {
+            map[key] = value;
+          }
         }
       }
       return map;

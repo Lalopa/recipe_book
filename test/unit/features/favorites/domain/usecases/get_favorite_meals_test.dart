@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:recipe_book/features/favorites/domain/entities/favorite_meal.dart';
 import 'package:recipe_book/features/favorites/domain/repositories/favorite_repository.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/get_favorite_meals.dart';
+import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 
 import 'get_favorite_meals_test.mocks.dart';
 
@@ -21,23 +21,21 @@ void main() {
     test('should return list of favorite meals when repository has favorites', () async {
       // Arrange
       final favoriteMeals = [
-        const FavoriteMeal(
+        const Meal(
           id: 'meal-1',
           name: 'Favorite Meal 1',
           thumbnail: 'https://example.com/meal1.jpg',
           category: 'Category 1',
           instructions: 'Instructions for meal 1',
           ingredients: {'ingredient1': 'amount1'},
-          addedAt: null,
         ),
-        const FavoriteMeal(
+        const Meal(
           id: 'meal-2',
           name: 'Favorite Meal 2',
           thumbnail: 'https://example.com/meal2.jpg',
           category: 'Category 2',
           instructions: 'Instructions for meal 2',
           ingredients: {'ingredient2': 'amount2'},
-          addedAt: null,
         ),
       ];
 
@@ -54,7 +52,7 @@ void main() {
 
     test('should return empty list when repository has no favorites', () async {
       // Arrange
-      when(mockRepository.getFavoriteMeals()).thenAnswer((_) async => <FavoriteMeal>[]);
+      when(mockRepository.getFavoriteMeals()).thenAnswer((_) async => <Meal>[]);
 
       // Act
       final result = await useCase();
@@ -67,8 +65,7 @@ void main() {
 
     test('should handle repository errors gracefully', () async {
       // Arrange
-      when(mockRepository.getFavoriteMeals())
-          .thenThrow(Exception('Repository error'));
+      when(mockRepository.getFavoriteMeals()).thenThrow(Exception('Repository error'));
 
       // Act & Assert
       expect(
@@ -80,14 +77,13 @@ void main() {
     test('should return single favorite meal when repository has only one', () async {
       // Arrange
       final singleFavoriteMeal = [
-        const FavoriteMeal(
+        const Meal(
           id: 'single-meal',
           name: 'Single Favorite Meal',
           thumbnail: 'https://example.com/single.jpg',
           category: 'Single Category',
           instructions: 'Single meal instructions',
           ingredients: {'single': 'ingredient'},
-          addedAt: null,
         ),
       ];
 
@@ -106,14 +102,13 @@ void main() {
       // Arrange
       final manyFavorites = List.generate(
         100,
-        (index) => FavoriteMeal(
+        (index) => Meal(
           id: 'meal-$index',
           name: 'Favorite Meal $index',
           thumbnail: 'https://example.com/meal$index.jpg',
           category: 'Category $index',
           instructions: 'Instructions for meal $index',
           ingredients: {'ingredient$index': 'amount$index'},
-          addedAt: null,
         ),
       );
 

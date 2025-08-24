@@ -8,8 +8,7 @@ import 'dart:async' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:recipe_book/features/favorites/data/datasources/favorite_local_datasource.dart'
     as _i2;
-import 'package:recipe_book/features/favorites/data/models/favorite_meal_model.dart'
-    as _i4;
+import 'package:recipe_book/features/meals/data/models/meal_model.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -52,12 +51,12 @@ class MockFavoriteLocalDataSource extends _i1.Mock
           as _i3.Future<bool>);
 
   @override
-  _i3.Future<List<_i4.FavoriteMealModel>> getFavoriteMeals() =>
+  _i3.Future<List<_i4.MealModel>> getFavoriteMeals() =>
       (super.noSuchMethod(
             Invocation.method(#getFavoriteMeals, []),
-            returnValue: _i3.Future<List<_i4.FavoriteMealModel>>.value(
-              <_i4.FavoriteMealModel>[],
+            returnValue: _i3.Future<List<_i4.MealModel>>.value(
+              <_i4.MealModel>[],
             ),
           )
-          as _i3.Future<List<_i4.FavoriteMealModel>>);
+          as _i3.Future<List<_i4.MealModel>>);
 }

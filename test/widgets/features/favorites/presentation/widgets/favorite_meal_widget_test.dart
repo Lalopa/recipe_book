@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:recipe_book/features/favorites/domain/entities/favorite_meal.dart';
 import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/favorites/presentation/widgets/favorite_button_widget.dart';
 import 'package:recipe_book/features/favorites/presentation/widgets/favorite_meal_widget.dart';
+import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/meal_image_widget.dart';
 
 import 'favorite_meal_widget_test.mocks.dart';
@@ -23,18 +23,17 @@ void main() {
       when(mockFavoriteBloc.add(any)).thenReturn(null);
     });
 
-    const testMeal = FavoriteMeal(
+    const testMeal = Meal(
       id: 'test-meal-id',
       name: 'Test Favorite Meal',
       thumbnail: 'https://example.com/test-meal.jpg',
       category: 'Test Category',
       instructions: 'These are the test instructions for the meal',
       ingredients: {'ingredient1': 'amount1', 'ingredient2': 'amount2'},
-      addedAt: null,
     );
 
     Widget createTestWidget({
-      required FavoriteMeal meal,
+      required Meal meal,
       Map<String, bool>? favoriteStatuses,
     }) {
       final state = FavoriteState(
@@ -108,14 +107,13 @@ void main() {
       });
 
       testWidgets('should handle long meal names with ellipsis', (tester) async {
-        const longMeal = FavoriteMeal(
+        const longMeal = Meal(
           id: 'long-meal-id',
           name: 'This is a very long meal name that should be truncated with ellipsis',
           thumbnail: 'https://example.com/long-meal.jpg',
           category: 'Long Category',
           instructions: 'Long instructions',
           ingredients: {'ingredient': 'amount'},
-          addedAt: null,
         );
 
         await tester.pumpWidget(createTestWidget(meal: longMeal));
@@ -129,7 +127,7 @@ void main() {
       });
 
       testWidgets('should handle long instructions with fade overflow', (tester) async {
-        const longInstructionsMeal = FavoriteMeal(
+        const longInstructionsMeal = Meal(
           id: 'long-instructions-meal',
           name: 'Test Meal',
           thumbnail: 'https://example.com/test.jpg',
@@ -137,7 +135,6 @@ void main() {
           instructions:
               'These are very long instructions that should fade out when they exceed the maximum number of lines allowed for display in the widget',
           ingredients: {'ingredient': 'amount'},
-          addedAt: null,
         );
 
         await tester.pumpWidget(createTestWidget(meal: longInstructionsMeal));
@@ -151,14 +148,13 @@ void main() {
       });
 
       testWidgets('should handle null thumbnail', (tester) async {
-        const mealWithoutThumbnail = FavoriteMeal(
+        const mealWithoutThumbnail = Meal(
           id: 'no-thumbnail-meal',
           name: 'Meal Without Thumbnail',
           thumbnail: null,
           category: 'No Thumbnail Category',
           instructions: 'Instructions for meal without thumbnail',
           ingredients: {'ingredient': 'amount'},
-          addedAt: null,
         );
 
         await tester.pumpWidget(createTestWidget(meal: mealWithoutThumbnail));
@@ -245,14 +241,13 @@ void main() {
 
     group('Edge Cases', () {
       testWidgets('should handle empty category', (tester) async {
-        const emptyCategory = FavoriteMeal(
+        const emptyCategory = Meal(
           id: 'empty-category-meal',
           name: 'Test Meal',
           thumbnail: 'https://example.com/test.jpg',
           category: '',
           instructions: 'Test instructions',
           ingredients: {'ingredient': 'amount'},
-          addedAt: null,
         );
 
         await tester.pumpWidget(createTestWidget(meal: emptyCategory));
@@ -261,14 +256,13 @@ void main() {
       });
 
       testWidgets('should handle empty instructions', (tester) async {
-        const emptyInstructions = FavoriteMeal(
+        const emptyInstructions = Meal(
           id: 'empty-instructions-meal',
           name: 'Test Meal',
           thumbnail: 'https://example.com/test.jpg',
           category: 'Test Category',
           instructions: '',
           ingredients: {'ingredient': 'amount'},
-          addedAt: null,
         );
 
         await tester.pumpWidget(createTestWidget(meal: emptyInstructions));
@@ -277,14 +271,13 @@ void main() {
       });
 
       testWidgets('should handle empty meal name', (tester) async {
-        const emptyName = FavoriteMeal(
+        const emptyName = Meal(
           id: 'empty-name-meal',
           name: '',
           thumbnail: 'https://example.com/test.jpg',
           category: 'Test Category',
           instructions: 'Test instructions',
           ingredients: {'ingredient': 'amount'},
-          addedAt: null,
         );
 
         await tester.pumpWidget(createTestWidget(meal: emptyName));

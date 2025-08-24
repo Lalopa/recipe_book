@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_book/core/utils/constants.dart';
 import 'package:recipe_book/features/main/presentation/pages/main_page.dart';
+import 'package:recipe_book/features/meals/domain/entities/meal.dart';
+import 'package:recipe_book/features/meals/presentation/pages/meal_detail_page.dart';
 import 'package:recipe_book/features/meals/presentation/pages/meals_page.dart';
 import 'package:recipe_book/features/search/presentation/pages/search_page.dart';
 
@@ -22,6 +24,21 @@ class AppRoutes {
       case AppRoutesNames.search:
         return MaterialPageRoute(
           builder: (_) => const SearchPage(),
+          settings: settings,
+        );
+
+      case AppRoutesNames.mealDetail:
+        final args = settings.arguments as Map<String, dynamic>?;
+        if (args == null || args['meal'] == null) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Meal not found')),
+            ),
+          );
+        }
+        final meal = args['meal'] as Meal;
+        return MaterialPageRoute(
+          builder: (_) => MealDetailPage(meal: meal),
           settings: settings,
         );
 

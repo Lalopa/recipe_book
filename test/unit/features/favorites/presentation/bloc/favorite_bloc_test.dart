@@ -2,11 +2,11 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:recipe_book/features/favorites/domain/entities/favorite_meal.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/check_favorite_status.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/get_favorite_meals.dart';
 import 'package:recipe_book/features/favorites/domain/usecases/toggle_favorite.dart';
 import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
+import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 
 import 'favorite_bloc_test.mocks.dart';
 
@@ -43,23 +43,21 @@ void main() {
 
     group('FavoritesLoaded', () {
       final testFavoriteMeals = [
-        const FavoriteMeal(
+        const Meal(
           id: 'meal-1',
           name: 'Test Meal 1',
           thumbnail: 'https://example.com/meal1.jpg',
           category: 'Test Category 1',
           instructions: 'Test instructions 1',
           ingredients: {'ingredient1': 'amount1'},
-          addedAt: null,
         ),
-        const FavoriteMeal(
+        const Meal(
           id: 'meal-2',
           name: 'Test Meal 2',
           thumbnail: 'https://example.com/meal2.jpg',
           category: 'Test Category 2',
           instructions: 'Test instructions 2',
           ingredients: {'ingredient2': 'amount2'},
-          addedAt: null,
         ),
       ];
 
@@ -95,7 +93,7 @@ void main() {
       blocTest<FavoriteBloc, FavoriteState>(
         'should emit loading state then empty state when no favorites',
         build: () {
-          when(mockGetFavoriteMeals()).thenAnswer((_) async => <FavoriteMeal>[]);
+          when(mockGetFavoriteMeals()).thenAnswer((_) async => <Meal>[]);
           return bloc;
         },
         act: (bloc) => bloc.add(const FavoritesLoaded()),
@@ -153,7 +151,7 @@ void main() {
         build: () {
           when(mockToggleFavorite(mealId)).thenAnswer((_) async {});
           when(mockCheckFavoriteStatus(mealId)).thenAnswer((_) async => true);
-          when(mockGetFavoriteMeals()).thenAnswer((_) async => <FavoriteMeal>[]);
+          when(mockGetFavoriteMeals()).thenAnswer((_) async => <Meal>[]);
           return bloc;
         },
         act: (bloc) => bloc.add(const FavoriteToggled(mealId)),
@@ -174,7 +172,7 @@ void main() {
             status: FavoriteStatus.success,
             favoriteMeals: [],
             isLoading: false,
-            favoriteStatuses: {mealId: true},
+            favoriteStatuses: {mealId: false},
           ),
         ],
         verify: (_) {

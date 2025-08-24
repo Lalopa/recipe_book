@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:recipe_book/features/favorites/data/datasources/favorite_local_datasource.dart';
-import 'package:recipe_book/features/favorites/data/models/favorite_meal_model.dart';
 import 'package:recipe_book/features/favorites/data/repositories_impl/favorite_repository_impl.dart';
-import 'package:recipe_book/features/favorites/domain/entities/favorite_meal.dart';
+import 'package:recipe_book/features/meals/data/models/meal_model.dart';
+import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 
 import 'favorite_repository_impl_test.mocks.dart';
 
@@ -48,25 +48,22 @@ void main() {
     group('getFavoriteMeals', () {
       test('should return list of favorite meal entities', () async {
         // Arrange
-        final testDateTime = DateTime(2024);
         final favoriteMealModels = [
-          FavoriteMealModel(
+          const MealModel(
             id: 'meal-1',
             name: 'Test Meal 1',
             thumbnail: 'https://example.com/meal1.jpg',
             category: 'Category 1',
             instructions: 'Instructions 1',
-            ingredients: const {'ingredient1': 'amount1'},
-            addedAt: testDateTime,
+            ingredients: {'ingredient1': 'amount1'},
           ),
-          FavoriteMealModel(
+          const MealModel(
             id: 'meal-2',
             name: 'Test Meal 2',
             thumbnail: null,
             category: 'Category 2',
             instructions: 'Instructions 2',
-            ingredients: const {'ingredient2': 'amount2'},
-            addedAt: testDateTime,
+            ingredients: {'ingredient2': 'amount2'},
           ),
         ];
 
@@ -76,7 +73,7 @@ void main() {
         final result = await repository.getFavoriteMeals();
 
         // Assert
-        expect(result, isA<List<FavoriteMeal>>());
+        expect(result, isA<List<Meal>>());
         expect(result.length, equals(2));
         expect(result[0].id, equals('meal-1'));
         expect(result[1].id, equals('meal-2'));
@@ -85,7 +82,7 @@ void main() {
 
       test('should return empty list when no favorite meals exist', () async {
         // Arrange
-        when(mockLocalDataSource.getFavoriteMeals()).thenAnswer((_) async => <FavoriteMealModel>[]);
+        when(mockLocalDataSource.getFavoriteMeals()).thenAnswer((_) async => <MealModel>[]);
 
         // Act
         final result = await repository.getFavoriteMeals();
