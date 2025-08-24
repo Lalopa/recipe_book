@@ -78,11 +78,14 @@ class _MealDetailPageState extends State<MealDetailPage> with SingleTickerProvid
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  MealImageWidget(
-                    imageUrl: widget.meal.thumbnail,
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    width: MediaQuery.of(context).size.width,
-                    bottomBorderRadius: 24,
+                  Hero(
+                    tag: 'meal-image-${widget.meal.id}',
+                    child: MealImageWidget(
+                      imageUrl: widget.meal.thumbnail,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      width: MediaQuery.of(context).size.width,
+                      bottomBorderRadius: 24,
+                    ),
                   ),
                 ],
               ),
