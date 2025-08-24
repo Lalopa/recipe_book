@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recipe_book/core/di/injector.dart';
 import 'package:recipe_book/core/utils/constants.dart';
+import 'package:recipe_book/features/favorites/presentation/bloc/favorite_bloc.dart';
 import 'package:recipe_book/features/main/presentation/pages/main_page.dart';
 import 'package:recipe_book/features/meals/domain/entities/meal.dart';
 import 'package:recipe_book/features/meals/presentation/pages/meal_detail_page.dart';
@@ -38,7 +41,10 @@ class AppRoutes {
         }
         final meal = args['meal'] as Meal;
         return MaterialPageRoute(
-          builder: (_) => MealDetailPage(meal: meal),
+          builder: (_) => BlocProvider(
+            create: (context) => getIt<FavoriteBloc>(),
+            child: MealDetailPage(meal: meal),
+          ),
           settings: settings,
         );
 

@@ -31,7 +31,10 @@ class ObjectBoxCacheManager {
       for (final meal in meals) {
         final objectBoxModel = MealObjectBoxModel.fromMealModel(meal, ttl: ttl);
 
-        final existing = _mealBox.query(MealObjectBoxModel_.mealId.equals(meal.id)).build().findFirst();
+        final existing = _mealBox
+            .query(MealObjectBoxModel_.mealId.equals(meal.id))
+            .build()
+            .findFirst();
         if (existing != null) {
           objectBoxModel
             ..id = existing.id
@@ -46,10 +49,15 @@ class ObjectBoxCacheManager {
         searchKey: key,
         dataJson: jsonEncode(meals.map((m) => m.toJson()).toList()),
         timestamp: DateTime.now(),
-        expiresAt: ttl != null ? DateTime.now().add(ttl) : DateTime.now().add(const Duration(hours: 1)),
+        expiresAt: ttl != null
+            ? DateTime.now().add(ttl)
+            : DateTime.now().add(const Duration(hours: 1)),
       );
 
-      final existingSearch = _searchCacheBox.query(SearchObjectBoxModel_.searchKey.equals(key)).build().findFirst();
+      final existingSearch = _searchCacheBox
+          .query(SearchObjectBoxModel_.searchKey.equals(key))
+          .build()
+          .findFirst();
       if (existingSearch != null) {
         searchEntry.id = existingSearch.id;
       }
@@ -64,7 +72,10 @@ class ObjectBoxCacheManager {
 
   Future<List<MealModel>?> getCachedMeals(String key) async {
     try {
-      final searchEntry = _searchCacheBox.query(SearchObjectBoxModel_.searchKey.equals(key)).build().findFirst();
+      final searchEntry = _searchCacheBox
+          .query(SearchObjectBoxModel_.searchKey.equals(key))
+          .build()
+          .findFirst();
 
       if (searchEntry == null || searchEntry.isExpired) {
         if (searchEntry?.isExpired ?? false) {
@@ -74,7 +85,9 @@ class ObjectBoxCacheManager {
       }
 
       final mealsJson = jsonDecode(searchEntry.dataJson) as List;
-      final mealIds = mealsJson.map((json) => (json as Map<String, dynamic>)['idMeal'] as String).toList();
+      final mealIds = mealsJson
+          .map((json) => (json as Map<String, dynamic>)['idMeal'] as String)
+          .toList();
 
       final meals = <MealModel>[];
       for (final mealId in mealIds) {
@@ -95,7 +108,10 @@ class ObjectBoxCacheManager {
 
   Future<MealModel?> getCachedMeal(String mealId) async {
     try {
-      final meal = _mealBox.query(MealObjectBoxModel_.mealId.equals(mealId)).build().findFirst();
+      final meal = _mealBox
+          .query(MealObjectBoxModel_.mealId.equals(mealId))
+          .build()
+          .findFirst();
 
       if (meal == null || meal.isExpired) {
         if (meal?.isExpired ?? false) {
@@ -116,7 +132,10 @@ class ObjectBoxCacheManager {
   // Métodos para manejar favoritos
   Future<void> toggleFavorite(String mealId) async {
     try {
-      final meal = _mealBox.query(MealObjectBoxModel_.mealId.equals(mealId)).build().findFirst();
+      final meal = _mealBox
+          .query(MealObjectBoxModel_.mealId.equals(mealId))
+          .build()
+          .findFirst();
       if (meal != null) {
         meal.isFavorite = !meal.isFavorite;
         _mealBox.put(meal);
@@ -133,7 +152,10 @@ class ObjectBoxCacheManager {
     required bool isFavorite,
   }) async {
     try {
-      final meal = _mealBox.query(MealObjectBoxModel_.mealId.equals(mealId)).build().findFirst();
+      final meal = _mealBox
+          .query(MealObjectBoxModel_.mealId.equals(mealId))
+          .build()
+          .findFirst();
       if (meal != null) {
         meal.isFavorite = isFavorite;
         _mealBox.put(meal);
@@ -147,7 +169,10 @@ class ObjectBoxCacheManager {
 
   Future<List<MealModel>> getFavoriteMeals() async {
     try {
-      final favoriteMeals = _mealBox.query(MealObjectBoxModel_.isFavorite.equals(true)).build().find();
+      final favoriteMeals = _mealBox
+          .query(MealObjectBoxModel_.isFavorite.equals(true))
+          .build()
+          .find();
 
       return favoriteMeals.map((meal) {
         final mealModel = meal.toMealModel();
@@ -163,7 +188,10 @@ class ObjectBoxCacheManager {
 
   Future<bool> isFavorite(String mealId) async {
     try {
-      final meal = _mealBox.query(MealObjectBoxModel_.mealId.equals(mealId)).build().findFirst();
+      final meal = _mealBox
+          .query(MealObjectBoxModel_.mealId.equals(mealId))
+          .build()
+          .findFirst();
       return meal?.isFavorite ?? false;
     } on Exception catch (e) {
       if (kDebugMode) {

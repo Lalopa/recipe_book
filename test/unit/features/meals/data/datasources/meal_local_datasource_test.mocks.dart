@@ -6,11 +6,9 @@
 import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i7;
+import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:recipe_book/core/cache/managers/objectbox_cache_manager.dart'
     as _i2;
-import 'package:recipe_book/features/favorites/data/models/favorite_meal_model.dart'
-    as _i6;
 import 'package:recipe_book/features/meals/data/models/meal_model.dart' as _i5;
 import 'package:recipe_book/objectbox.g.dart' as _i3;
 
@@ -97,14 +95,14 @@ class MockObjectBoxCacheManager extends _i1.Mock
           as _i4.Future<void>);
 
   @override
-  _i4.Future<List<_i6.FavoriteMealModel>> getFavoriteMeals() =>
+  _i4.Future<List<_i5.MealModel>> getFavoriteMeals() =>
       (super.noSuchMethod(
             Invocation.method(#getFavoriteMeals, []),
-            returnValue: _i4.Future<List<_i6.FavoriteMealModel>>.value(
-              <_i6.FavoriteMealModel>[],
+            returnValue: _i4.Future<List<_i5.MealModel>>.value(
+              <_i5.MealModel>[],
             ),
           )
-          as _i4.Future<List<_i6.FavoriteMealModel>>);
+          as _i4.Future<List<_i5.MealModel>>);
 
   @override
   _i4.Future<bool> isFavorite(String? mealId) =>
@@ -113,6 +111,33 @@ class MockObjectBoxCacheManager extends _i1.Mock
             returnValue: _i4.Future<bool>.value(false),
           )
           as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> clearAllCache() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearAllCache, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> clearExpiredCache() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearExpiredCache, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> clearSearchCache() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearSearchCache, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<List<dynamic>?> getCachedSearchResults(String? query) =>
@@ -126,7 +151,7 @@ class MockObjectBoxCacheManager extends _i1.Mock
   String normalizeQuery(String? query) =>
       (super.noSuchMethod(
             Invocation.method(#normalizeQuery, [query]),
-            returnValue: _i7.dummyValue<String>(
+            returnValue: _i6.dummyValue<String>(
               this,
               Invocation.method(#normalizeQuery, [query]),
             ),

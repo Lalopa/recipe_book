@@ -24,6 +24,7 @@ class _MealDetailPageState extends State<MealDetailPage> with SingleTickerProvid
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    context.read<FavoriteBloc>().add(const FavoritesLoaded());
   }
 
   @override
@@ -38,7 +39,6 @@ class _MealDetailPageState extends State<MealDetailPage> with SingleTickerProvid
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          // App Bar con imagen de fondo
           SliverAppBar(
             expandedHeight: MediaQuery.of(context).size.height * 0.4,
             pinned: true,
@@ -80,21 +80,9 @@ class _MealDetailPageState extends State<MealDetailPage> with SingleTickerProvid
                 children: [
                   MealImageWidget(
                     imageUrl: widget.meal.thumbnail,
-                    height: double.infinity,
-                    width: double.infinity,
-                  ),
-                  // Gradiente para mejorar legibilidad del texto
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withValues(alpha: 0.3),
-                        ],
-                      ),
-                    ),
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    width: MediaQuery.of(context).size.width,
+                    bottomBorderRadius: 24,
                   ),
                 ],
               ),
@@ -103,125 +91,59 @@ class _MealDetailPageState extends State<MealDetailPage> with SingleTickerProvid
 
           // Contenido de la receta
           SliverToBoxAdapter(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFF8F6F1), // Color beige claro similar a la imagen
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                  child: Text(
+                    widget.meal.name,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF3E2723), // Marrón oscuro
+                    ),
+                  ),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Título y autor
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.meal.name,
-                                style: const TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF3E2723), // Marrón oscuro
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text(
-                              'By Recipe Book',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            const Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '4.7',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                            Text(
-                              ' (127 ratings)',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
 
-                  // Tabs
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 24),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Colors.grey[300]!,
-                        ),
-                      ),
+                // Tabs
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 24),
+                  child: TabBar(
+                    controller: _tabController,
+                    indicatorColor: const Color(0xFF68B684),
+                    indicatorWeight: 3,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelColor: const Color(0xFF3E2723),
+                    unselectedLabelColor: const Color(0xFF3E2723),
+                    labelStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                    child: TabBar(
-                      controller: _tabController,
-                      indicatorColor: const Color(0xFF68B684), // Verde de la app
-                      indicatorWeight: 3,
-                      labelColor: const Color(0xFF3E2723), // Marrón oscuro
-                      unselectedLabelColor: Colors.grey[600],
-                      labelStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      unselectedLabelStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      tabs: const [
-                        Tab(text: 'Ingredients'),
-                        Tab(text: 'Directions'),
-                      ],
+                    unselectedLabelStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
                     ),
+                    tabs: const [
+                      Tab(text: 'Ingredients'),
+                      Tab(text: 'Directions'),
+                    ],
                   ),
+                ),
 
-                  // Contenido de los tabs
-                  Container(
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height * 0.4,
-                    ),
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        // Tab de Ingredientes
-                        _buildIngredientsTab(),
-                        // Tab de Instrucciones
-                        _buildDirectionsTab(),
-                      ],
-                    ),
+                // Contenido de los tabs
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildIngredientsTab(),
+                      _buildDirectionsTab(),
+                    ],
                   ),
-
-                  const SizedBox(height: 24),
-                ],
-              ),
+                ),
+                const SizedBox(height: 24),
+              ],
             ),
           ),
         ],
@@ -230,7 +152,7 @@ class _MealDetailPageState extends State<MealDetailPage> with SingleTickerProvid
   }
 
   Widget _buildIngredientsTab() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,7 +204,7 @@ class _MealDetailPageState extends State<MealDetailPage> with SingleTickerProvid
   }
 
   Widget _buildDirectionsTab() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
