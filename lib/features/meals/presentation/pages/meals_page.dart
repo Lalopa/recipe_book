@@ -112,7 +112,8 @@ class MealResultsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async => context.read<MealBloc>().add(const MealRefreshed()),
+      onRefresh: () async =>
+          context.read<MealBloc>().add(const MealRefreshed()),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -121,7 +122,10 @@ class MealResultsWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
                 decoration: const BoxDecoration(
                   color: Color(0xFFDDDDDD),
                   borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -165,17 +169,19 @@ class MealResultsWidget extends StatelessWidget {
                       children: [
                         Text(
                           'No results found',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'We are working on it',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[500],
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Colors.grey[500],
+                              ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -184,12 +190,13 @@ class MealResultsWidget extends StatelessWidget {
                 : GridView.builder(
                     controller: _controller,
                     itemCount: meals.length + (hasReachedMax ? 0 : 1),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 0.65,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: 0.65,
+                        ),
                     padding: const EdgeInsets.all(8),
                     itemBuilder: (context, index) {
                       if (index >= meals.length) {
