@@ -43,7 +43,7 @@ class ObjectBoxConfig {
       log('ObjectBox initialized successfully at: $objectboxDir');
 
       // Inicializar el cache manager completo
-      ObjectBoxCacheManager.instance.initialize(_store!);
+      ObjectBoxCacheManager().initialize(_store!);
     } on Exception catch (e) {
       log('Error initializing ObjectBox: $e');
     }
