@@ -17,7 +17,8 @@ class MealDetailPage extends StatefulWidget {
   State<MealDetailPage> createState() => _MealDetailPageState();
 }
 
-class _MealDetailPageState extends State<MealDetailPage> with SingleTickerProviderStateMixin {
+class _MealDetailPageState extends State<MealDetailPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -62,7 +63,8 @@ class _MealDetailPageState extends State<MealDetailPage> with SingleTickerProvid
             actions: [
               BlocBuilder<FavoriteBloc, FavoriteState>(
                 builder: (context, state) {
-                  final isFavorite = state.favoriteStatuses[widget.meal.id] ?? false;
+                  final isFavorite =
+                      state.favoriteStatuses[widget.meal.id] ?? false;
                   return Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: FavoriteButtonWidget(
