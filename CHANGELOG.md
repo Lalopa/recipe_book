@@ -1,6 +1,40 @@
 # Changelog
 
+## 0.6.0+19 (2025-01-27)
+
+### Added
+- feat(animations): implement Hero animations and custom page transitions
+  - Add Hero tags for smooth image transitions between preview and detail pages
+  - Implement custom PageRouteBuilder with slide transitions
+  - Add entrance animations with TweenAnimationBuilder for smooth widget appearance
+  - Include AnimatedScale for favorite button interactions
+- feat(favorites): resolve missing ingredients issue in favorite meals
+  - Automatically fetch complete meal data from cache when navigating from favorites
+  - Ensure consistent meal data across all navigation paths
+  - Maintain favorite status during data retrieval
+
+### Fixed
+- fix(cache): resolve ObjectBoxCacheManager initialization error in clear cache button
+  - Use GetIt singleton instead of creating new instances
+  - Ensure proper dependency injection for ObjectBoxCacheManager
+  - Maintain existing functionality while resolving provider access issues
+
+### Changed
+- perf(animations): optimize animation durations and curves for better UX
+  - Increase entrance animation duration to 800ms for smoother feel
+  - Use easeOutCubic curve for natural animation progression
+
+### Test
+- test(meals): update MealPreviewWidget test to handle AnimatedScale wrapper
+  - Update test to expect AnimatedScale instead of FavoriteButtonWidget directly
+  - Verify that AnimatedScale contains FavoriteButtonWidget as child
+  - Maintain test coverage for favorite icon positioning functionality
+- test(search): update SearchPage test to match current Skeletonizer implementation
+  - Update loading state test to expect Skeletonizer instead of SearchLoadingWidget
+  - Add Skeletonizer import to test file
+  - Maintain test coverage for loading state functionality
+
 ## 0.0.1 (2025-08-22)
 
 ### Added
-- docs(changelog.md): changelog file was added to the project ([68ac785](https://github.com/Lalopa/recipe_book/commit/68ac78534fb38311606eee1b960920a4bff13204))
+- docs(changelog.md): changelog file was added to the project ([68ac785](https://github.com/Lac78534fb38311606eee1b960920a4bff13204))
