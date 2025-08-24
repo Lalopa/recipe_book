@@ -9,8 +9,8 @@ import 'package:recipe_book/features/meals/presentation/widgets/custom_app_bar_w
 import 'package:recipe_book/features/search/presentation/bloc/search_bloc.dart';
 import 'package:recipe_book/features/search/presentation/widgets/search_error_widget.dart';
 import 'package:recipe_book/features/search/presentation/widgets/search_initial_widget.dart';
-import 'package:recipe_book/features/search/presentation/widgets/search_loading_widget.dart';
 import 'package:recipe_book/features/search/presentation/widgets/search_results_widget.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -138,7 +138,12 @@ class _SearchViewState extends State<SearchView> {
                     case SearchStatus.initial:
                       return const SearchInitialWidget();
                     case SearchStatus.loading:
-                      return const SearchLoadingWidget();
+                      return const Skeletonizer(
+                        child: SearchResultsWidget(
+                          meals: [],
+                          query: '',
+                        ),
+                      );
                     case SearchStatus.success:
                       return SearchResultsWidget(
                         meals: state.meals,

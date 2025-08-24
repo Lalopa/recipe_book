@@ -207,7 +207,13 @@ void main() {
 
       expect(positionedWidget.top, 8);
       expect(positionedWidget.right, 8);
-      expect(positionedWidget.child, isA<FavoriteButtonWidget>());
+      expect(positionedWidget.child, isA<AnimatedScale>());
+
+      // Verificar que el AnimatedScale contiene el FavoriteButtonWidget
+      final animatedScale = tester.widget<AnimatedScale>(
+        find.byType(AnimatedScale),
+      );
+      expect(animatedScale.child, isA<FavoriteButtonWidget>());
     });
 
     testWidgets('should have correct favorite icon size', (tester) async {

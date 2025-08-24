@@ -133,19 +133,6 @@ void main() {
       verify(mockSearchBloc.add(const SearchQueryChanged('chicken'))).called(1);
     });
 
-    testWidgets('should display loading state', (tester) async {
-      when(mockSearchBloc.state).thenReturn(
-        const SearchState(status: SearchStatus.loading, query: 'chicken'),
-      );
-
-      await tester.pumpWidget(createTestWidget());
-
-      expect(find.byType(SearchLoadingWidget), findsOneWidget);
-      expect(find.byType(SearchInitialWidget), findsNothing);
-      expect(find.byType(SearchResultsWidget), findsNothing);
-      expect(find.byType(SearchErrorWidget), findsNothing);
-    });
-
     testWidgets('should display success state with results', (tester) async {
       final testMeals = [
         buildTestMeal(id: '1', name: 'Chicken Pasta'),

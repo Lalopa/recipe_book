@@ -12,6 +12,7 @@ import 'package:recipe_book/features/meals/presentation/widgets/custom_app_bar_w
 import 'package:recipe_book/features/meals/presentation/widgets/meal_loading_widget.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/meal_preview_error_widget.dart';
 import 'package:recipe_book/features/meals/presentation/widgets/meal_preview_widget.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class MealsPage extends StatelessWidget {
   const MealsPage({super.key});
@@ -70,24 +71,18 @@ class _MealsViewState extends State<MealsView> {
         body: BlocBuilder<MealBloc, MealState>(
           builder: (context, state) {
             switch (state.status) {
-              case MealStatus.success:
-                return MealResultsWidget(
-                  controller: _controller,
-                  meals: state.meals,
-                  hasReachedMax: state.hasReachedMax,
-                );
               case MealStatus.failure:
                 return const MealPreviewWidgetError();
               case MealStatus.initial:
                 context.read<MealBloc>().add(const MealFetched());
               case MealStatus.loading:
-                if (state.meals.isNotEmpty) {
-                  return MealResultsWidget(
-                    controller: _controller,
-                    meals: state.meals,
-                    hasReachedMax: state.hasReachedMax,
-                  );
-                }
+              case MealStatus.success:
+                return MealResultsWidget(
+                  controller: _controller,
+                  meals: state.meals,
+                  hasReachedMax: state.hasReachedMax,
+                  isLoading: state.status == MealStatus.loading || state.status == MealStatus.initial,
+                );
             }
             return const MealLoadingWidget();
           },
@@ -102,12 +97,14 @@ class MealResultsWidget extends StatelessWidget {
     required ScrollController controller,
     required this.meals,
     required this.hasReachedMax,
+    required this.isLoading,
     super.key,
   }) : _controller = controller;
 
   final ScrollController _controller;
   final List<Meal> meals;
   final bool hasReachedMax;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -154,14 +151,14 @@ class MealResultsWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
                 onPressed: () {
-                  ObjectBoxCacheManager().clearAllCache();
+                  getIt<ObjectBoxCacheManager>().clearAllCache();
                   context.read<MealBloc>().add(const MealRefreshed());
                 },
                 child: const Text('Limpiar Cache'),
               ),
             ),
           Expanded(
-            child: meals.isEmpty
+            child: meals.isEmpty && !isLoading
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -196,9 +193,18 @@ class MealResultsWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     itemBuilder: (context, index) {
                       if (index >= meals.length) {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Center(child: CircularProgressIndicator()),
+                        return Skeletonizer(
+                          enabled: isLoading,
+                          child: const MealPreviewWidget(
+                            meal: Meal(
+                              id: '',
+                              name: '',
+                              category: '',
+                              instructions: '',
+                              thumbnail: '',
+                              ingredients: {},
+                            ),
+                          ),
                         );
                       }
                       final meal = meals[index];
